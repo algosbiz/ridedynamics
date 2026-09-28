@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Ride Dynamics design tokens.
+
+  Every colour and size below was measured from the live original site
+  (https://www.ridedynamics.com.au) rather than guessed by eye.
+  Changing a value here changes it everywhere on the site.
+
+  Tailwind v4 turns these into utility classes automatically, so
+  `--color-rd-red` becomes `text-rd-red`, `bg-rd-red`, `border-rd-red`.
+*/
+@theme {
+  --color-rd-red: #ed1c24; /* brand red: active menu link, button outlines */
+  --color-rd-red-dark: #a41c24; /* the bar at the very bottom of the page */
+  --color-rd-black: #0e0e0f; /* the menu bar across the top */
+  --color-rd-panel: #000000; /* the black panel each page sits on */
+  --color-rd-gray: #8f8f8f; /* body text and inactive menu links */
+  --color-rd-gray-hover: #a8a8a8; /* menu link hover colour */
+  --color-rd-yellow: #fdd900; /* footer service words and small links */
+
+  /* Fonts. The originals are Adobe Fonts (Typekit) faces that cannot be
+     reused off that domain, so we load the closest free equivalents:
+       franklin-gothic-urw       -> Libre Franklin
+       franklin-gothic-urw-cond  -> Archivo Narrow
+     The original page also asks for open-sans / league-gothic, but those
+     never load on the live site any more and fall back to plain Arial,
+     so `--font-plain` matches what visitors actually see today. */
+  --font-body: var(--font-libre-franklin), Arial, Helvetica, sans-serif;
+  --font-cond: var(--font-archivo-narrow), Arial, Helvetica, sans-serif;
+  --font-plain: Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+  /* The original site changes layout at 676px, 851px and 1151px.
+     We use the same three points so the clone reflows where the
+     original does. Write them as `tablet:`, `laptop:` and `desktop:`
+     prefixes, e.g. `desktop:flex-row`. Tailwind's built-in sm/md/lg
+     still work too, but this project sticks to these three. */
+  --breakpoint-tablet: 676px;
+  --breakpoint-laptop: 851px;
+  --breakpoint-desktop: 1151px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* The scratched dark backdrop that sits behind every page. */
+html {
+  background: #000000 url("/images/common/site-backdrop.jpg") repeat center top;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  color: var(--color-rd-gray);
+  /* The fixed menu bar is 52px tall, so page content starts below it. */
+  padding-top: 52px;
+}
+
+/* The matching red glow on the big homepage headline. */
+.rd-text-glow {
+  text-shadow:
+    0 0 8px rgba(237, 28, 36, 0.25),
+    0 0 8px rgba(237, 28, 36, 0.25);
+}
+
+/* The red glow around the three picture links on the homepage.
+   The original applies the same shadow twice, which makes it stronger,
+   so it is repeated here too. */
+.rd-glow {
+  box-shadow:
+    0 0 8px rgba(237, 28, 36, 0.5),
+    0 0 8px rgba(237, 28, 36, 0.5);
+}
+
+/* Make keyboard focus clearly visible without changing the visual design. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-rd-red);
+  outline-offset: 2px;
 }
