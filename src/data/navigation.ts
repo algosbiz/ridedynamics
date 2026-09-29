@@ -4,13 +4,13 @@ import type { NavItem } from "@/types";
 // The desktop header and the mobile menu both read this one list,
 // so adding or renaming a link here updates both.
 export const navItems: NavItem[] = [
-  { label: "HOME", href: "/", width: 80 },
-  { label: "ABOUT", href: "/about", width: 80 },
-  { label: "SERVICES", href: "/services", width: 90 },
-  { label: "SUSPENSION PARTS", href: "/suspension-parts", width: 165 },
-  { label: "BRAKE COMPONENTS", href: "/brake-components", width: 175 },
-  { label: "LUBRICANTS", href: "/lubricants", width: 110 },
-  { label: "CONTACT", href: "/contact", width: 90 },
+  { label: "HOME", href: "/" },
+  { label: "ABOUT", href: "/about" },
+  { label: "SERVICES", href: "/services" },
+  { label: "SUSPENSION PARTS", href: "/suspension-parts" },
+  { label: "BRAKE COMPONENTS", href: "/brake-components" },
+  { label: "LUBRICANTS", href: "/lubricants" },
+  { label: "CONTACT", href: "/contact" },
 ];
 
 // The original site has an "ONLINE STORE / CART" menu item, but it is

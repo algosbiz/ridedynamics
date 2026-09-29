@@ -4,10 +4,6 @@
 export type NavItem = {
   label: string;
   href: string;
-  // Width of the menu button in pixels on large screens. The original
-  // site gives each button its own fixed width rather than sizing them
-  // to the words, so these are copied from it.
-  width: number;
 };
 
 // The three picture links on the homepage (Suspension Parts / Brake

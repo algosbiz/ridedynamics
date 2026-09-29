@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Container from "@/components/ui/Container";
-import { contactInfo, footerCredit, footerServices } from "@/data/contact";
+import FooterCredit from "@/components/layout/FooterCredit";
+import { contactInfo, footerServices } from "@/data/contact";
 
 // The footer shown at the bottom of every page: the badge, the four
 // service words, the phone number, the address, and the red credit bar.
@@ -61,20 +62,10 @@ export default function Footer() {
 
       {/* The thin red bar at the very bottom. */}
       <div
-        className="bg-rd-red-dark flex h-[35px] items-center justify-center px-4"
+        className="bg-rd-red-dark flex min-h-[35px] items-center justify-center px-4 py-[2px]"
         style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
       >
-        <p className="text-center font-plain text-[10px] leading-[15px] font-light tracking-[1px] text-white">
-          {footerCredit.text}
-          <a
-            href={footerCredit.linkHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-rd-yellow"
-          >
-            {footerCredit.linkLabel}
-          </a>
-        </p>
+        <FooterCredit builtInYear={new Date().getFullYear()} />
       </div>
     </footer>
   );

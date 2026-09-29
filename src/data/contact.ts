@@ -14,8 +14,13 @@ export const contactInfo = {
 export const footerServices = ["Suspension", "Servicing", "Installation", "Tuning"];
 
 // The credit line in the red bar at the very bottom of every page.
+// The year is worked out automatically, so it never needs editing.
 export const footerCredit = {
-  text: "\u00A9 2025. Ride Dynamics. |  Built by a ",
-  linkLabel: "Web Design Agency",
-  linkHref: "https://baliwebsitevideos.com",
+  // Shown on every page.
+  business: "Ride Dynamics",
+  // Shown on the homepage only, after the copyright. Only the agency
+  // name is a link - the words in front of it stay as plain text.
+  homepageCreditPrefix: "Optimized by ",
+  homepageCreditLink: "SEO Boost Australia",
+  homepageCreditHref: "https://seoboost.au",
 };
