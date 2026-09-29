@@ -2,7 +2,7 @@
 // Change productionUrl if the site ever moves to a different domain.
 export const site = {
   name: "Ride Dynamics",
-  productionUrl: "https://www.ridedynamics.com.au",
+  productionUrl: "https://ridedynamics.com.au",
   // The original site uses this same title on every page.
   homeTitle: "Motorcycle Suspension Specialist | Ride Dynamics",
 };
