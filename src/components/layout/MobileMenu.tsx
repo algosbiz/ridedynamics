@@ -51,7 +51,10 @@ export default function MobileMenu() {
         <nav
           id="mobile-menu"
           aria-label="Main menu"
-          className="fixed top-[52px] right-0 left-0 z-40 flex flex-col gap-px"
+          // The red backing is what shows through the 2px gaps between
+          // the items, giving the thin red separator lines the original
+          // has. Without it the page behind shows through instead.
+          className="bg-rd-red fixed top-[52px] right-0 left-0 z-40 flex flex-col gap-[2px]"
         >
           {navItems.map((item) => {
             const isCurrent = pathname === item.href;
