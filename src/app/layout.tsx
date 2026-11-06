@@ -1,28 +1,25 @@
 import type { Metadata } from "next";
-import { Archivo_Narrow, Libre_Franklin } from "next/font/google";
+import { Gabarito, Instrument_Sans } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
+import "./reference-design.css";
+import "./inner-pages.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MotionDirector from "@/components/motion/MotionDirector";
+import ReliefDefinitions from "@/components/home/ReliefDefinitions";
 import { isProduction, site } from "@/data/site";
 
-// The original site uses two Adobe Fonts faces that are licensed to that
-// domain, so we load the closest free equivalents from Google Fonts.
-// next/font downloads them at build time, so there is no extra request
-// for the visitor and no flash of unstyled text.
-const libreFranklin = Libre_Franklin({
+// Self-host the same open-source typefaces used in the design reference.
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
-  // Body copy, labels and buttons: regular, medium and semibold only.
-  weight: ["400", "500", "600"],
-  variable: "--font-libre-franklin",
+  variable: "--font-instrument-sans",
   display: "swap",
 });
 
-const archivoNarrow = Archivo_Narrow({
+const gabarito = Gabarito({
   subsets: ["latin"],
-  // Display face: 700 for the big uppercase headings, 600 for card titles.
-  weight: ["600", "700"],
-  variable: "--font-archivo-narrow",
+  variable: "--font-gabarito",
   display: "swap",
 });
 
@@ -31,7 +28,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.productionUrl),
   title: site.homeTitle,
   // Preview and local builds must not be indexed as copies of the real site.
-  robots: isProduction ? { index: true, follow: true } : { index: false, follow: false },
+  robots: isProduction
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
 };
 
 export default function RootLayout({
@@ -42,9 +41,14 @@ export default function RootLayout({
   return (
     <html
       lang="en-US"
-      className={`${libreFranklin.variable} ${archivoNarrow.variable}`}
+      data-scroll-behavior="smooth"
+      className={`${instrumentSans.variable} ${gabarito.variable}`}
     >
       <body className="flex min-h-screen flex-col">
+        <a className="rd-skip-link" href="#main">
+          Skip to content
+        </a>
+        <ReliefDefinitions />
         <Header />
         <main id="main" className="flex-1 overflow-x-clip">
           {children}

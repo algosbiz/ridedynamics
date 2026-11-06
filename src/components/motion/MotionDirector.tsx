@@ -1,20 +1,12 @@
 "use client";
 
-// Starts the scroll animations once the page has settled.
-//
-// GSAP is not in the first download. On a wide screen, and only when the
-// visitor has not asked for reduced motion, it is fetched while the
-// browser is idle. Phones and reduced-motion visitors never load it and
-// simply see the finished page. Runs again on every page change so the
-// new page's elements are picked up, and tears the old ones down.
+// Start once fonts are ready, without an idle delay that could attach the
+// sticky scenes in the middle of the visitor's first scroll gesture.
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-// Kept in step with MOTION_QUERY in src/lib/motion.ts. It is repeated
-// here so that deciding whether to download GSAP needs no GSAP.
-const MOTION_QUERY =
-  "(min-width: 851px) and (prefers-reduced-motion: no-preference)";
+const MOTION_QUERY = "(prefers-reduced-motion: no-preference)";
 
 export default function MotionDirector() {
   const pathname = usePathname();
@@ -28,26 +20,22 @@ export default function MotionDirector() {
     const start = () => {
       if (disposed || started || !media.matches) return;
       started = true;
-      import("@/lib/motion").then(({ initMotion }) => {
-        if (disposed) return;
-        const root = document.getElementById("main");
-        if (root) cleanup = initMotion(root);
-      });
+      Promise.all([import("@/lib/motion"), document.fonts.ready]).then(
+        ([{ initMotion }]) => {
+          if (disposed) return;
+          const root = document.getElementById("main");
+          if (root) cleanup = initMotion(root);
+        },
+      );
     };
 
-    // Safari has no requestIdleCallback; a short timeout does the same job.
-    const hasIdle = typeof window.requestIdleCallback === "function";
-    const idle = hasIdle
-      ? window.requestIdleCallback(start, { timeout: 1500 })
-      : setTimeout(start, 300);
+    start();
 
-    // Someone who widens their window later still gets the animations.
+    // Honor a reduced-motion preference change without reloading the page.
     media.addEventListener("change", start);
 
     return () => {
       disposed = true;
-      if (hasIdle) window.cancelIdleCallback(idle as number);
-      else clearTimeout(idle);
       media.removeEventListener("change", start);
       cleanup?.();
     };

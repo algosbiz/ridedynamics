@@ -36,10 +36,9 @@
      (GSAP's "power4.out" is the same shape). */
   --ease-rd: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* franklin-gothic-urw -> Libre Franklin, franklin-gothic-urw-cond ->
-     Archivo Narrow (closest free equivalents of the original Adobe Fonts). */
-  --font-body: var(--font-libre-franklin), Arial, Helvetica, sans-serif;
-  --font-cond: var(--font-archivo-narrow), "Arial Narrow", Arial, sans-serif;
+  /* Match the reference's display/body pairing across all existing pages. */
+  --font-body: var(--font-instrument-sans), Arial, Helvetica, sans-serif;
+  --font-cond: var(--font-gabarito), Arial, sans-serif;
   --font-plain: Arial, "Helvetica Neue", Helvetica, sans-serif;
 
   /* The original site changes layout at 676px, 851px and 1151px. */

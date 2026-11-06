@@ -1,67 +1,76 @@
-import Image from "next/image";
-import Container from "@/components/ui/Container";
+import type { CSSProperties } from "react";
+import Link from "next/link";
 import FooterCredit from "@/components/layout/FooterCredit";
 import { contactInfo, footerServices } from "@/data/contact";
-
-// The footer shown at the bottom of every page: the badge, the four
-// service words, the phone number, the address, and the red credit bar.
-// All of the wording comes from src/data/contact.ts.
+import { navItems } from "@/data/navigation";
+import { toSentenceCase } from "@/lib/text";
 
 export default function Footer() {
   return (
-    <footer className="mt-auto">
-      <div className="rd-surface relative overflow-hidden border-t border-white/[0.05]">
-        {/* The business name stamped into the footer: the one decorative
-            word on the site. */}
-        <span
-          aria-hidden="true"
-          className="rd-deboss pointer-events-none absolute right-0 -bottom-[0.2em] font-cond text-[22vw] leading-none font-bold whitespace-nowrap uppercase select-none desktop:text-[240px]"
+    <footer id="footer" className="mt-auto">
+      <div className="footer__tray m-ply">
+        <p
+          className="footer__mark m-raised"
+          style={{ "--len": 14 } as CSSProperties}
         >
-          Ride Dynamics
-        </span>
-
-        <Container className="relative grid gap-10 pt-16 pb-16 laptop:grid-cols-12 laptop:gap-8 laptop:pt-20 laptop:pb-24">
-          <div className="flex items-start gap-6 laptop:col-span-5">
-            <Image
-              src="/images/logo/ride-dynamics-logo-small.png"
-              alt="Ride Dynamics"
-              width={192}
-              height={192}
-              className="h-28 w-28 flex-none laptop:h-36 laptop:w-36"
-            />
-            <ul className="font-cond text-[20px] leading-[1.4] font-bold text-rd-yellow laptop:text-[24px]">
+          Ride Dynamics.
+        </p>
+        <span className="footer__crease" aria-hidden="true" />
+        <div className="footer__cols">
+          <div className="footer__col">
+            <p className="m-text-3">The workshop</p>
+            <ul className="rd-footer-services">
               {footerServices.map((service) => (
                 <li key={service}>{service}</li>
               ))}
             </ul>
           </div>
-
-          <div className="laptop:col-span-3">
-            <p className="text-sm font-medium text-rd-muted">Phone</p>
-            <a
-              href={contactInfo.phoneHref}
-              className="mt-2 inline-block font-cond text-[32px] leading-none font-bold text-rd-light tabular-nums no-underline transition-colors duration-150 ease-rd hover:text-white"
-            >
-              {contactInfo.phone}
-            </a>
+          <nav className="footer__col" aria-label="Footer">
+            <p className="m-text-3">Pages</p>
+            <ul>
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link className="m-link-2" href={item.href}>
+                    {toSentenceCase(item.label)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="footer__col">
+            <p className="m-text-3">Contact</p>
+            <ul>
+              {contactInfo.emails.map((email) => (
+                <li key={email}>
+                  <a className="m-link-2" href={`mailto:${email}`}>
+                    {email}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a className="m-link-2" href={contactInfo.phoneHref}>
+                  {contactInfo.phone}
+                </a>
+              </li>
+            </ul>
           </div>
-
-          <div className="laptop:col-span-4">
-            <p className="text-sm font-medium text-rd-muted">Address</p>
-            <address className="mt-2 text-base leading-[1.6] text-rd-light not-italic">
+          <div className="footer__col">
+            <p className="m-text-3">Visit</p>
+            <address className="m-text not-italic">
               {contactInfo.address.map((line) => (
-                <span key={line} className="block">
+                <span className="block" key={line}>
                   {line}
                 </span>
               ))}
             </address>
           </div>
-        </Container>
-      </div>
-
-      {/* The thin red bar at the very bottom. */}
-      <div className="flex min-h-10 items-center justify-center bg-rd-red-dark px-4 py-2">
-        <FooterCredit builtInYear={new Date().getFullYear()} />
+        </div>
+        <div className="footer__legal">
+          <FooterCredit builtInYear={new Date().getFullYear()} />
+          <a className="m-link-2" href="#main">
+            Back to the top
+          </a>
+        </div>
       </div>
     </footer>
   );

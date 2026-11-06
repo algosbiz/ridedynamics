@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Container from "@/components/ui/Container";
+import Link from "next/link";
+import PageHero from "@/components/ui/PageHero";
 import CtaBand from "@/components/ui/CtaBand";
 import NumberedSteps from "@/components/ui/NumberedSteps";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -13,8 +14,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-// Short labels for each chapter of the story, taken from what that
-// paragraph is about.
 const chapters = [
   "From Salter Engineering",
   "Ride Dynamics is born",
@@ -23,93 +22,94 @@ const chapters = [
   "Our promise",
 ];
 
-const delay = (seconds: number) => ({ "--d": `${seconds}s` }) as React.CSSProperties;
-
 export default function AboutPage() {
   return (
-    <>
-      {/* ---------- Hero ---------- */}
-      <section className="pt-12 pb-16 laptop:pt-16 laptop:pb-20">
-        <Container className="grid items-center gap-10 laptop:grid-cols-12">
-          <div className="laptop:col-span-6">
-            <p className="rd-rise text-sm font-medium text-rd-muted">Gold Coast based</p>
-            <h1
-              className="rd-emboss rd-rise mt-4 font-cond text-[44px] leading-[0.95] font-bold uppercase text-balance tablet:text-[64px] desktop:text-[76px]"
-              style={delay(0.05)}
-            >
-              About Ride Dynamics
-            </h1>
-            <div className="rd-rise mt-8 w-40 laptop:w-48" style={delay(0.1)}>
-              <Image
-                src="/images/about/ride-dynamics-emblem.png"
-                alt="Ride Dynamics"
-                width={339}
-                height={339}
-                preload
-                className="h-auto w-full"
-              />
-            </div>
-          </div>
-          <div className="laptop:col-span-6">
-            <figure className="rd-surface overflow-hidden rounded-[20px] p-3">
+    <div className="rd-page rd-about-page">
+      <PageHero
+        eyebrow="Gold Coast based"
+        title="About Ride Dynamics"
+        lines={["About", "Ride Dynamics"]}
+        lead="Ride Dynamics is a Gold Coast based Motorcycle Suspension Tuning Business."
+        actions={
+          <>
+            <a className="m-btn" href="#story">
+              Our story
+            </a>
+            <Link className="m-link-2" href="/services">
+              Our services
+            </Link>
+          </>
+        }
+        visual={
+          <figure className="rd-workshop-portrait">
+            <div className="rd-photo-well">
               <Image
                 src="/images/about/ride-dynamics-workshop.png"
                 alt="The Ride Dynamics workshop"
                 width={454}
                 height={347}
                 preload
-                sizes="(min-width: 851px) 45vw, 95vw"
-                className="h-auto w-full rounded-[8px]"
+                sizes="(min-width: 768px) 40vw, 85vw"
               />
-            </figure>
-          </div>
-        </Container>
-      </section>
-
-      {/* ---------- The story, as numbered chapters ---------- */}
-      <section className="py-16 laptop:py-20" aria-labelledby="story-title">
-        <Container className="grid gap-12 laptop:grid-cols-12">
-          <div className="laptop:col-span-4">
-            <div className="laptop:sticky laptop:top-[calc(var(--rd-header-h)+32px)]">
-              <SectionHeading kicker="Our story" title="How we got here" id="story-title" />
             </div>
-          </div>
-          <div className="laptop:col-span-8">
-            <NumberedSteps
-              items={aboutParagraphs.map((text, index) => ({
-                title: chapters[index],
-                text: text.trim(),
-              }))}
+            <Image
+              className="rd-workshop-emblem"
+              src="/images/about/ride-dynamics-emblem.png"
+              alt="Ride Dynamics"
+              width={339}
+              height={339}
+              sizes="(min-width: 768px) 140px, 100px"
+              preload
             />
-          </div>
-        </Container>
+          </figure>
+        }
+      />
+      <section
+        id="story"
+        className="rd-page-section rd-page-split"
+        aria-labelledby="story-title"
+      >
+        <div className="rd-page-sticky">
+          <SectionHeading
+            kicker="Our story"
+            title="How we got here"
+            id="story-title"
+          />
+        </div>
+        <NumberedSteps
+          items={aboutParagraphs.map((text, index) => ({
+            title: chapters[index],
+            text: text.trim(),
+          }))}
+        />
       </section>
-
-      {/* ---------- Gallery ---------- */}
-      <section className="py-8 laptop:py-12" aria-label="Suspension work">
-        <Container>
-          <ul
-            className="flex flex-wrap items-end justify-center gap-4 laptop:justify-between"
-            data-reveal
-          >
-            {aboutGallery.map((image) => (
-              <li key={image.src} className="rd-surface rounded-[16px] p-2">
+      <section
+        className="rd-page-section rd-gallery-section"
+        aria-labelledby="gallery-title"
+      >
+        <SectionHeading
+          kicker="The workshop"
+          title="Suspension work"
+          id="gallery-title"
+        />
+        <ul className="rd-photo-strip">
+          {aboutGallery.map((image) => (
+            <li key={image.src} data-reveal>
+              <figure className="rd-photo-well">
                 <Image
-                  src={image.src}
+                  {...image}
                   alt={image.alt}
-                  width={image.width}
-                  height={image.height}
-                  className="block h-auto max-w-full rounded-[8px]"
+                  sizes="(min-width: 768px) 17vw, 40vw"
                 />
-              </li>
-            ))}
-          </ul>
-        </Container>
+                <figcaption className="m-text-3">{image.alt}</figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
       </section>
-
       <CtaBand title="Talk to the tuners">
         <p>{aboutParagraphs[4]}</p>
       </CtaBand>
-    </>
+    </div>
   );
 }

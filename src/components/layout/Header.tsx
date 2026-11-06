@@ -1,80 +1,162 @@
 "use client";
 
-// The menu bar fixed across the top of every page. It needs "use client"
-// to read the current address and mark the current page's link.
-
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import MobileMenu from "@/components/layout/MobileMenu";
-import Container from "@/components/ui/Container";
 import { contactInfo } from "@/data/contact";
-import {
-  navItems,
-  onlineStoreLabel,
-  onlineStoreUrl,
-  showOnlineStoreLink,
-} from "@/data/navigation";
+import { navItems } from "@/data/navigation";
 import { toSentenceCase } from "@/lib/text";
-
-// The current page is the one link marked in red.
-const linkStyle =
-  "relative flex h-9 items-center px-3 text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-rd after:absolute after:right-3 after:bottom-0.5 after:left-3 after:h-0.5 after:bg-rd-red";
 
 export default function Header() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const toggle = useRef<HTMLButtonElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
+  const home = pathname === "/";
+  const close = () => {
+    setOpen(false);
+    toggle.current?.focus();
+  };
+
+  useEffect(() => {
+    let previous = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (Math.abs(y - previous) > 4) {
+        setHidden(y > previous && y > 140);
+        previous = y;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButton.current?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggle.current?.focus();
+      }
+      if (event.key !== "Tab") return;
+      const nodes =
+        menu.current?.querySelectorAll<HTMLElement>("a[href], button");
+      if (!nodes?.length) return;
+      const first = nodes[0],
+        last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
-    <header className="fixed top-0 right-0 left-0 z-50 h-[var(--rd-header-h)] border-b border-white/[0.06] bg-rd-black/95">
-      <Container className="flex h-full items-center gap-4">
-        <Link href="/" aria-label="Ride Dynamics home" className="flex flex-none items-center gap-3">
+    <header
+      id="navigation"
+      data-hidden={hidden && !open ? "" : undefined}
+      onFocusCapture={() => setHidden(false)}
+    >
+      <div className="nav__bar m-board">
+        <Link
+          className="nav__brand"
+          href={home ? "#hero" : "/"}
+          aria-label="Ride Dynamics home"
+        >
           <Image
             src="/images/logo/ride-dynamics-mark.png"
-            alt=""
             width={27}
             height={30}
-            className="h-7 w-auto"
+            alt=""
           />
-          <span className="font-cond text-lg leading-none font-bold text-rd-light">
-            Ride Dynamics
-          </span>
+          <span className="m-title">Ride Dynamics.</span>
         </Link>
-
-        <nav aria-label="Main menu" className="ml-auto hidden items-center desktop:flex">
-          {navItems.map((item) => {
-            const isCurrent = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={isCurrent ? "page" : undefined}
-                className={`${linkStyle} ${
-                  isCurrent ? "text-rd-light after:block" : "text-rd-gray after:hidden hover:text-rd-light"
-                }`}
-              >
-                {toSentenceCase(item.label)}
-              </Link>
-            );
-          })}
-
-          {showOnlineStoreLink && (
-            <a href={onlineStoreUrl} className={`${linkStyle} text-rd-gray after:hidden hover:text-rd-light`}>
-              {toSentenceCase(onlineStoreLabel)}
-            </a>
-          )}
+        <nav aria-label="Main menu">
+          <ul className="nav__links">
+            {navItems
+              .filter((item) => item.href !== "/")
+              .map((item) => (
+                <li key={item.href}>
+                  <Link
+                    className="m-link-2"
+                    href={item.href}
+                    aria-current={pathname === item.href ? "page" : undefined}
+                  >
+                    {toSentenceCase(item.label)}
+                  </Link>
+                </li>
+              ))}
+          </ul>
         </nav>
-
-        <a
-          href={contactInfo.phoneHref}
-          className="hidden h-9 flex-none items-center rounded-[8px] bg-rd-surface-2 px-4 text-sm font-medium text-rd-light tabular-nums shadow-[inset_0_0_0_1px_rgba(228,228,230,0.1)] transition-colors duration-150 ease-rd hover:bg-[#252529] min-[1300px]:inline-flex"
-        >
-          {contactInfo.phone}
+        <a className="m-btn nav__cta" href={contactInfo.phoneHref}>
+          <span className="m-btn__label">{contactInfo.phone}</span>
         </a>
-
-        <div className="ml-auto desktop:hidden">
-          <MobileMenu />
-        </div>
-      </Container>
+        <button
+          ref={toggle}
+          className="m-icon-btn nav__toggle"
+          type="button"
+          aria-expanded={open}
+          aria-controls="menu"
+          aria-label="Open menu"
+          onClick={() => setOpen(true)}
+        >
+          <span className="m-icon-btn__glyph" aria-hidden="true" />
+        </button>
+      </div>
+      <div
+        ref={menu}
+        className="nav__menu m-ply"
+        id="menu"
+        data-lenis-prevent
+        hidden={!open}
+        role={open ? "dialog" : undefined}
+        aria-modal={open ? true : undefined}
+        aria-label="Main menu"
+      >
+        <button
+          ref={closeButton}
+          className="m-icon-btn nav__menu-close"
+          type="button"
+          aria-expanded="true"
+          aria-controls="menu"
+          aria-label="Close menu"
+          onClick={close}
+        >
+          <span className="m-icon-btn__glyph" aria-hidden="true" />
+        </button>
+        <nav aria-label="Mobile menu">
+          <ul className="nav__menu-links">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={close}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                >
+                  {toSentenceCase(item.label)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <a className="nav__menu-lang" href={contactInfo.phoneHref}>
+          Call {contactInfo.phone}
+        </a>
+      </div>
     </header>
   );
 }

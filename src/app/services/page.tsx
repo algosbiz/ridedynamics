@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import ButtonLink from "@/components/ui/ButtonLink";
-import Container from "@/components/ui/Container";
+import PageHero from "@/components/ui/PageHero";
 import CtaBand from "@/components/ui/CtaBand";
 import NumberedSteps from "@/components/ui/NumberedSteps";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -23,113 +22,104 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services" },
 };
 
-const delay = (seconds: number) => ({ "--d": `${seconds}s` }) as React.CSSProperties;
+const serviceTitles = [
+  "Front fork maintenance",
+  "Front fork upgrades",
+  "Headset bearings",
+  "Triple clamps",
+  "Rear shock maintenance",
+  "Rear shock upgrades",
+  "Swingarm & linkage",
+  "Swingarm alterations",
+  "Brake servicing",
+  "Custom motorcycle building",
+];
 
 export default function ServicesPage() {
-  const photos = [...servicesSideImages.slice(1), ...servicesBottomImages];
-  const tallPhoto = servicesSideImages[2];
-
+  const photos = [
+    servicesSideImages[1],
+    ...servicesBottomImages,
+    servicesSideImages[2],
+  ];
   return (
-    <>
-      {/* ---------- Hero ---------- */}
-      <section className="pt-12 pb-16 laptop:pt-16 laptop:pb-20">
-        <Container className="grid items-center gap-10 laptop:grid-cols-12">
-          <div className="laptop:col-span-7">
-            <p className="rd-rise text-sm font-medium text-rd-muted">
-              Suspension · Brakes · Custom builds
-            </p>
-            <h1
-              className="rd-emboss rd-rise mt-4 font-cond text-[44px] leading-[0.95] font-bold uppercase tablet:text-[64px] desktop:text-[76px]"
-              style={delay(0.05)}
-            >
-              {servicesHeading}
-            </h1>
-            <p
-              className="rd-rise mt-6 max-w-[36rem] text-lg leading-[1.6] text-rd-gray"
-              style={delay(0.1)}
-            >
-              {servicesIntro}
-            </p>
-            <div className="rd-rise mt-8 flex flex-wrap gap-3" style={delay(0.15)}>
-              <ButtonLink href="#list">What we do</ButtonLink>
-              <ButtonLink href={contactInfo.phoneHref} variant="ghost">
-                Book on {contactInfo.phone}
-              </ButtonLink>
-            </div>
+    <div className="rd-page rd-services-page">
+      <PageHero
+        eyebrow="Suspension · Brakes · Custom builds"
+        title={servicesHeading}
+        lines={[servicesHeading]}
+        lead={servicesIntro}
+        actions={
+          <>
+            <a className="m-btn" href="#list">
+              What we do
+            </a>
+            <a className="m-link-2" href={contactInfo.phoneHref}>
+              Book on {contactInfo.phone}
+            </a>
+          </>
+        }
+        visual={
+          <div className="rd-service-seal m-ply">
+            <span className="rd-service-seal__ring" aria-hidden="true" />
+            <Image
+              {...servicesSideImages[0]}
+              alt={servicesSideImages[0].alt}
+              preload
+              sizes="(min-width: 768px) 300px, 220px"
+            />
           </div>
-          <div className="laptop:col-span-5">
-            <figure className="rd-surface mx-auto w-full max-w-[340px] rounded-[20px] p-3 laptop:max-w-[420px]">
+        }
+      />
+      <section
+        id="list"
+        className="rd-page-section rd-page-split"
+        aria-labelledby="list-title"
+      >
+        <div className="rd-page-sticky">
+          <SectionHeading
+            kicker="What we do"
+            title="Ten jobs, done properly"
+            id="list-title"
+          >
+            <p>{servicesListIntro}</p>
+          </SectionHeading>
+        </div>
+        <div>
+          <NumberedSteps
+            className="rd-service-chapters"
+            items={servicesList.map((text, index) => ({
+              title: serviceTitles[index],
+              text,
+            }))}
+          />
+          <p className="rd-service-outro m-text">{servicesOutro}</p>
+        </div>
+      </section>
+      <section
+        className="rd-page-section rd-gallery-section"
+        aria-labelledby="workshop-title"
+      >
+        <div className="rd-section-top">
+          <SectionHeading
+            kicker="The workshop"
+            title="Suspension. Brakes. Custom builds."
+            id="workshop-title"
+          />
+        </div>
+        <div className="rd-workshop-grid">
+          {photos.map((image) => (
+            <figure className="rd-photo-well" key={image.src} data-reveal>
               <Image
-                src={servicesSideImages[0].src}
-                alt={servicesSideImages[0].alt}
-                width={servicesSideImages[0].width}
-                height={servicesSideImages[0].height}
-                preload
-                sizes="(min-width: 851px) 420px, 340px"
-                className="aspect-square h-auto w-full rounded-[8px] object-cover"
+                {...image}
+                alt={image.alt}
+                sizes="(min-width: 768px) 40vw, 85vw"
               />
+              <figcaption className="m-text-3">{image.alt}</figcaption>
             </figure>
-          </div>
-        </Container>
+          ))}
+        </div>
       </section>
-
-      {/* ---------- The numbered list of services ---------- */}
-      <section id="list" className="py-16 laptop:py-20" aria-labelledby="list-title">
-        <Container className="grid gap-12 laptop:grid-cols-12">
-          <div className="laptop:col-span-4">
-            <div className="laptop:sticky laptop:top-[calc(var(--rd-header-h)+32px)]">
-              <SectionHeading kicker="What we do" title="Ten jobs, done properly" id="list-title">
-                <p>{servicesListIntro}</p>
-              </SectionHeading>
-            </div>
-          </div>
-          <div className="laptop:col-span-8">
-            <NumberedSteps items={servicesList.map((text) => ({ text }))} />
-            {/* Lines up with the step text: 48px number box + gap. */}
-            <p className="mt-12 max-w-[60ch] pl-16 text-base leading-[1.7] text-rd-gray tablet:pl-[72px]">
-              {servicesOutro}
-            </p>
-          </div>
-        </Container>
-      </section>
-
-      {/* ---------- Photos ---------- */}
-      <section className="py-8 laptop:py-12" aria-label="Workshop photos">
-        <Container>
-          {/* The tall custom-build photo stands on the right; the three
-              landscape photos stack on the left. */}
-          <div className="grid gap-6 tablet:grid-cols-2" data-reveal>
-            <div className="grid gap-6">
-              {photos
-                .filter((image) => image !== tallPhoto)
-                .map((image) => (
-                  <figure key={image.src} className="rd-surface overflow-hidden rounded-[20px] p-3">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      width={image.width}
-                      height={image.height}
-                      sizes="(min-width: 676px) 45vw, 90vw"
-                      className="aspect-[16/9] h-auto w-full rounded-[8px] object-cover"
-                    />
-                  </figure>
-                ))}
-            </div>
-            <figure className="rd-surface overflow-hidden rounded-[20px] p-3">
-              <Image
-                src={tallPhoto.src}
-                alt={tallPhoto.alt}
-                width={tallPhoto.width}
-                height={tallPhoto.height}
-                sizes="(min-width: 676px) 45vw, 90vw"
-                className="h-full w-full rounded-[8px] object-cover"
-              />
-            </figure>
-          </div>
-        </Container>
-      </section>
-
       <CtaBand title="Book your suspension in" />
-    </>
+    </div>
   );
 }

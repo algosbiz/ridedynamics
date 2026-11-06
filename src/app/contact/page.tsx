@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import ButtonLink from "@/components/ui/ButtonLink";
-import Container from "@/components/ui/Container";
+import PageHero from "@/components/ui/PageHero";
+import ContactForm from "@/components/home/ContactForm";
 import SpecTable from "@/components/ui/SpecTable";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { contactInfo } from "@/data/contact";
 import { site } from "@/data/site";
 
@@ -13,55 +14,62 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-const linkStyle =
-  "text-rd-light underline decoration-rd-muted underline-offset-4 transition-colors duration-150 ease-rd hover:text-white hover:decoration-rd-light";
-
-const delay = (seconds: number) => ({ "--d": `${seconds}s` }) as React.CSSProperties;
-
 export default function ContactPage() {
   const webAddress = site.productionUrl.replace(/^https?:\/\//, "");
-
   return (
-    <section className="pt-12 pb-20 laptop:pt-16 laptop:pb-24">
-      <Container className="grid gap-12 laptop:grid-cols-12">
-        <div className="laptop:col-span-6">
-          <p className="rd-rise text-sm font-medium text-rd-muted">
-            Motorcycle suspension and brake specialist
-          </p>
-          <h1
-            className="rd-emboss rd-rise mt-4 font-cond text-[44px] leading-[0.95] font-bold uppercase tablet:text-[64px] desktop:text-[76px]"
-            style={delay(0.05)}
-          >
-            Contact
-          </h1>
-          <div className="rd-rise mt-8 flex flex-wrap gap-3" style={delay(0.1)}>
-            <ButtonLink href={contactInfo.phoneHref}>Call {contactInfo.phone}</ButtonLink>
-            <ButtonLink href={`mailto:${contactInfo.emails[0]}`} variant="ghost">
+    <div className="rd-page rd-contact-page">
+      <PageHero
+        eyebrow="Motorcycle suspension and brake specialist"
+        title="Contact"
+        lines={["Contact"]}
+        actions={
+          <>
+            <a className="m-btn" href={contactInfo.phoneHref}>
+              Call {contactInfo.phone}
+            </a>
+            <a className="m-link-2" href={`mailto:${contactInfo.emails[0]}`}>
               Email us
-            </ButtonLink>
-          </div>
-          <div className="rd-rise mt-12 max-w-[420px]" style={delay(0.15)}>
+            </a>
+          </>
+        }
+        visual={
+          <div className="rd-contact-logo m-ply">
             <Image
               src="/images/logo/ride-dynamics-logo.png"
               alt="Ride Dynamics"
               width={630}
               height={292}
               preload
-              className="h-auto w-full"
+              sizes="(min-width: 768px) 40vw, 85vw"
             />
           </div>
+        }
+      />
+      <section
+        id="enquiry"
+        className="rd-page-section rd-contact"
+        aria-labelledby="details-title"
+      >
+        <div className="rd-contact__header">
+          <SectionHeading
+            kicker="Details"
+            title="Ride Dynamics"
+            id="details-title"
+          />
+          <a className="rd-contact-phone m-cut" href={contactInfo.phoneHref}>
+            {contactInfo.phone}
+          </a>
         </div>
-
-        <div className="laptop:col-span-6 laptop:pt-8">
-          <div className="rd-surface rounded-[20px] p-6 tablet:p-10">
-            <p className="mb-4 text-sm font-medium text-rd-muted">Details</p>
+        <div className="rd-contact__body">
+          <ContactForm />
+          <aside>
             <SpecTable
               caption="Contact details"
               specs={[
                 {
                   label: "Mobile",
                   value: (
-                    <a href={contactInfo.phoneHref} className={`${linkStyle} tabular-nums`}>
+                    <a className="m-link-2" href={contactInfo.phoneHref}>
                       {contactInfo.phone}
                     </a>
                   ),
@@ -69,34 +77,45 @@ export default function ContactPage() {
                 {
                   label: "Email",
                   value: (
-                    <span className="flex flex-col gap-1">
+                    <div className="rd-contact-emails">
                       {contactInfo.emails.map((email) => (
-                        <a key={email} href={`mailto:${email}`} className={linkStyle}>
+                        <a
+                          key={email}
+                          className="m-link-2"
+                          href={`mailto:${email}`}
+                        >
                           {email}
                         </a>
                       ))}
-                    </span>
+                    </div>
                   ),
                 },
                 {
                   label: "Address",
                   value: (
-                    <address className="not-italic">
+                    <address>
                       {contactInfo.address.map((line) => (
-                        <span key={line} className="block">
+                        <span className="block" key={line}>
                           {line}
                         </span>
                       ))}
                     </address>
                   ),
                 },
-                { label: "Web", value: webAddress },
-                { label: "ABN", value: <span className="tabular-nums">{contactInfo.abn}</span> },
+                {
+                  label: "Web",
+                  value: (
+                    <a className="m-link-2" href={site.productionUrl}>
+                      {webAddress}
+                    </a>
+                  ),
+                },
+                { label: "ABN", value: contactInfo.abn },
               ]}
             />
-          </div>
+          </aside>
         </div>
-      </Container>
-    </section>
+      </section>
+    </div>
   );
 }

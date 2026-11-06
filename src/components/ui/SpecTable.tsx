@@ -1,27 +1,17 @@
-// A two-column spec sheet with dashed rules between the rows, like a
-// printed parts label.
+export type Spec = { label: string; value: React.ReactNode };
+type SpecTableProps = { specs: Spec[]; caption?: string; className?: string };
 
-export type Spec = {
-  label: string;
-  value: React.ReactNode;
-};
-
-type SpecTableProps = {
-  specs: Spec[];
-  caption?: string;
-  className?: string;
-};
-
-export default function SpecTable({ specs, caption, className = "" }: SpecTableProps) {
+export default function SpecTable({
+  specs,
+  caption,
+  className = "",
+}: SpecTableProps) {
   return (
-    <dl className={`rd-dash border-t text-[15px] leading-[1.6] ${className}`} aria-label={caption}>
+    <dl className={`rd-spec-sheet ${className}`} aria-label={caption}>
       {specs.map((spec) => (
-        <div
-          key={spec.label}
-          className="rd-dash grid grid-cols-1 gap-1 border-b py-4 tablet:grid-cols-[minmax(140px,34%)_1fr] tablet:gap-6"
-        >
-          <dt className="text-sm font-medium text-rd-muted">{spec.label}</dt>
-          <dd className="text-rd-light">{spec.value}</dd>
+        <div key={spec.label}>
+          <dt className="m-text-3">{spec.label}</dt>
+          <dd className="m-text">{spec.value}</dd>
         </div>
       ))}
     </dl>
