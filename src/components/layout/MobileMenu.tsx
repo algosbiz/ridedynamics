@@ -13,6 +13,7 @@ import {
   onlineStoreUrl,
   showOnlineStoreLink,
 } from "@/data/navigation";
+import { toSentenceCase } from "@/lib/text";
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,16 +38,16 @@ export default function MobileMenu() {
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
         aria-label={isOpen ? "Close menu" : "Open menu"}
-        className="relative grid h-[44px] w-[44px] cursor-pointer place-items-center rounded-full bg-rd-surface shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]"
+        className="relative grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-rd-surface shadow-[inset_0_0_0_1px_rgba(228,228,230,0.08)]"
       >
-        <span aria-hidden="true" className="relative block h-[12px] w-[20px]">
+        <span aria-hidden="true" className="relative block h-3 w-5">
           <span
-            className={`absolute left-0 h-[2px] w-full bg-rd-red transition-transform duration-300 ${
+            className={`absolute left-0 h-0.5 w-full bg-rd-light transition-transform duration-200 ease-rd ${
               isOpen ? "top-[5px] rotate-45" : "top-0"
             }`}
           />
           <span
-            className={`absolute left-0 h-[2px] w-full bg-rd-red transition-transform duration-300 ${
+            className={`absolute left-0 h-0.5 w-full bg-rd-light transition-transform duration-200 ease-rd ${
               isOpen ? "top-[5px] -rotate-45" : "top-[10px]"
             }`}
           />
@@ -57,10 +58,10 @@ export default function MobileMenu() {
         <nav
           id="mobile-menu"
           aria-label="Main menu"
-          className="rd-grain fixed top-[var(--rd-header-h)] right-0 left-0 z-40 max-h-[calc(100dvh-var(--rd-header-h))] overflow-y-auto border-b border-white/[0.06] bg-rd-black px-4 pt-2 pb-6 shadow-[0_24px_40px_-12px_rgba(0,0,0,0.9)] tablet:px-6"
+          className="fixed top-[var(--rd-header-h)] right-0 left-0 z-40 max-h-[calc(100dvh-var(--rd-header-h))] overflow-y-auto border-b border-white/[0.06] bg-rd-black px-4 pt-2 pb-6 tablet:px-6"
         >
           <ul>
-            {navItems.map((item, index) => {
+            {navItems.map((item) => {
               const isCurrent = pathname === item.href;
               return (
                 <li key={item.href} className="rd-dash border-b">
@@ -68,14 +69,12 @@ export default function MobileMenu() {
                     href={item.href}
                     onClick={close}
                     aria-current={isCurrent ? "page" : undefined}
-                    className={`flex min-h-[52px] items-center gap-4 font-cond text-[20px] font-bold tracking-[1.5px] ${
-                      isCurrent ? "text-white" : "text-rd-gray hover:text-rd-light"
+                    className={`flex min-h-12 items-center gap-3 text-lg font-medium ${
+                      isCurrent ? "text-rd-light" : "text-rd-gray hover:text-rd-light"
                     }`}
                   >
-                    <span aria-hidden="true" className="w-7 text-[13px] text-rd-red">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    {item.label}
+                    {isCurrent && <span aria-hidden="true" className="h-4 w-0.5 bg-rd-red" />}
+                    {toSentenceCase(item.label)}
                   </Link>
                 </li>
               );
@@ -85,16 +84,16 @@ export default function MobileMenu() {
                 <a
                   href={onlineStoreUrl}
                   onClick={close}
-                  className="flex min-h-[52px] items-center pl-11 font-cond text-[20px] font-bold tracking-[1.5px] text-rd-yellow"
+                  className="flex min-h-12 items-center text-lg font-medium text-rd-gray hover:text-rd-light"
                 >
-                  {onlineStoreLabel}
+                  {toSentenceCase(onlineStoreLabel)}
                 </a>
               </li>
             )}
           </ul>
           <a
             href={contactInfo.phoneHref}
-            className="mt-5 flex min-h-[52px] items-center justify-center rounded-full bg-rd-red font-cond text-[17px] font-bold tracking-[2px] text-white"
+            className="mt-6 flex h-12 items-center justify-center rounded-[10px] bg-rd-red text-base font-semibold text-white"
           >
             Call {contactInfo.phone}
           </a>

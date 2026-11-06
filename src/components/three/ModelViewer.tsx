@@ -131,7 +131,7 @@ export default function ModelViewer({
       aria-label={label}
     >
       <div
-        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ${
+        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-rd ${
           ready ? "opacity-0" : "opacity-100"
         }`}
       >
@@ -167,15 +167,15 @@ export default function ModelViewer({
           aria-hidden={ready ? undefined : true}
           tabIndex={ready ? 0 : -1}
           onKeyDown={onKeyDown}
-          className={`absolute inset-0 h-full w-full cursor-grab touch-pan-y transition-opacity duration-700 active:cursor-grabbing ${
+          className={`absolute inset-0 h-full w-full cursor-grab touch-pan-y transition-opacity duration-500 ease-rd active:cursor-grabbing ${
             ready ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         />
       )}
 
       {ready && (
-        <p className="pointer-events-none absolute right-0 bottom-0 left-0 text-center font-cond text-[12px] tracking-[3px] text-rd-gray uppercase">
-          Drag to rotate
+        <p className="pointer-events-none absolute right-0 bottom-0 left-0 text-center text-xs text-rd-muted">
+          Drag to turn
         </p>
       )}
     </div>

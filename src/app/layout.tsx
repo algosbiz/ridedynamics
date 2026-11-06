@@ -12,14 +12,16 @@ import { isProduction, site } from "@/data/site";
 // for the visitor and no flash of unstyled text.
 const libreFranklin = Libre_Franklin({
   subsets: ["latin"],
-  weight: ["400", "700", "900"],
+  // Body copy, labels and buttons: regular, medium and semibold only.
+  weight: ["400", "500", "600"],
   variable: "--font-libre-franklin",
   display: "swap",
 });
 
 const archivoNarrow = Archivo_Narrow({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  // Display face: 700 for the big uppercase headings, 600 for card titles.
+  weight: ["600", "700"],
   variable: "--font-archivo-narrow",
   display: "swap",
 });

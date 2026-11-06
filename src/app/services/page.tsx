@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services" },
 };
 
+const delay = (seconds: number) => ({ "--d": `${seconds}s` }) as React.CSSProperties;
+
 export default function ServicesPage() {
   const photos = [...servicesSideImages.slice(1), ...servicesBottomImages];
   const tallPhoto = servicesSideImages[2];
@@ -30,72 +32,61 @@ export default function ServicesPage() {
   return (
     <>
       {/* ---------- Hero ---------- */}
-      <section data-hero className="relative overflow-hidden pt-10 pb-16 laptop:pt-16 laptop:pb-24">
-        <span
-          aria-hidden="true"
-          data-drift="-6"
-          className="rd-deboss pointer-events-none absolute top-4 right-[-4vw] font-cond text-[30vw] leading-[0.8] font-bold whitespace-nowrap uppercase select-none laptop:text-[20vw]"
-        >
-          Workshop
-        </span>
-
-        <Container className="relative grid items-center gap-10 laptop:grid-cols-12">
+      <section className="pt-12 pb-16 laptop:pt-16 laptop:pb-20">
+        <Container className="grid items-center gap-10 laptop:grid-cols-12">
           <div className="laptop:col-span-7">
-            <p className="rd-rise flex items-center gap-3 font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
-              <span aria-hidden="true">01</span>
-              <span aria-hidden="true" className="h-px w-10 bg-rd-red/60" />
+            <p className="rd-rise text-sm font-medium text-rd-muted">
               Suspension · Brakes · Custom builds
             </p>
             <h1
-              className="rd-emboss rd-rise mt-5 font-cond text-[64px] leading-[0.92] font-bold uppercase tablet:text-[96px] desktop:text-[120px]"
-              style={{ "--d": "0.08s" } as React.CSSProperties}
+              className="rd-emboss rd-rise mt-4 font-cond text-[44px] leading-[0.95] font-bold uppercase tablet:text-[64px] desktop:text-[76px]"
+              style={delay(0.05)}
             >
               {servicesHeading}
             </h1>
             <p
-              className="rd-rise mt-6 max-w-[56ch] text-[19px] leading-[1.6] text-rd-light/85"
-              style={{ "--d": "0.16s" } as React.CSSProperties}
+              className="rd-rise mt-6 max-w-[36rem] text-lg leading-[1.6] text-rd-gray"
+              style={delay(0.1)}
             >
               {servicesIntro}
             </p>
-            <div
-              className="rd-rise mt-8 flex flex-wrap gap-3"
-              style={{ "--d": "0.24s" } as React.CSSProperties}
-            >
+            <div className="rd-rise mt-8 flex flex-wrap gap-3" style={delay(0.15)}>
               <ButtonLink href="#list">What we do</ButtonLink>
               <ButtonLink href={contactInfo.phoneHref} variant="ghost">
                 Book on {contactInfo.phone}
               </ButtonLink>
             </div>
           </div>
-          <div className="laptop:col-span-5" data-hero-stage>
-            <div className="rd-surface relative mx-auto aspect-square w-full max-w-[340px] rounded-full p-10 laptop:max-w-[420px]">
+          <div className="laptop:col-span-5">
+            <figure className="rd-surface mx-auto w-full max-w-[340px] rounded-[20px] p-3 laptop:max-w-[420px]">
               <Image
                 src={servicesSideImages[0].src}
                 alt={servicesSideImages[0].alt}
                 width={servicesSideImages[0].width}
                 height={servicesSideImages[0].height}
                 preload
-                className="h-full w-full rounded-full object-contain"
+                sizes="(min-width: 851px) 420px, 340px"
+                className="aspect-square h-auto w-full rounded-[8px] object-cover"
               />
-            </div>
+            </figure>
           </div>
         </Container>
       </section>
 
-      {/* ---------- 02 The numbered list of services ---------- */}
-      <section id="list" className="py-16 laptop:py-24" aria-labelledby="list-title">
+      {/* ---------- The numbered list of services ---------- */}
+      <section id="list" className="py-16 laptop:py-20" aria-labelledby="list-title">
         <Container className="grid gap-12 laptop:grid-cols-12">
           <div className="laptop:col-span-4">
             <div className="laptop:sticky laptop:top-[calc(var(--rd-header-h)+32px)]">
-              <SectionHeading number="02" kicker="What we do" title="Ten jobs, done properly" id="list-title">
+              <SectionHeading kicker="What we do" title="Ten jobs, done properly" id="list-title">
                 <p>{servicesListIntro}</p>
               </SectionHeading>
             </div>
           </div>
           <div className="laptop:col-span-8">
             <NumberedSteps items={servicesList.map((text) => ({ text }))} />
-            <p className="mt-12 max-w-[60ch] pl-[72px] text-[16px] leading-[1.65] tablet:pl-[96px]" data-reveal>
+            {/* Lines up with the step text: 48px number box + gap. */}
+            <p className="mt-12 max-w-[60ch] pl-16 text-base leading-[1.7] text-rd-gray tablet:pl-[72px]">
               {servicesOutro}
             </p>
           </div>
@@ -107,40 +98,38 @@ export default function ServicesPage() {
         <Container>
           {/* The tall custom-build photo stands on the right; the three
               landscape photos stack on the left. */}
-          <div className="grid gap-6 tablet:grid-cols-2">
+          <div className="grid gap-6 tablet:grid-cols-2" data-reveal>
             <div className="grid gap-6">
               {photos
                 .filter((image) => image !== tallPhoto)
                 .map((image) => (
-                  <figure key={image.src} className="rd-surface overflow-hidden rounded-[20px] p-3" data-reveal>
+                  <figure key={image.src} className="rd-surface overflow-hidden rounded-[20px] p-3">
                     <Image
                       src={image.src}
                       alt={image.alt}
                       width={image.width}
                       height={image.height}
                       sizes="(min-width: 676px) 45vw, 90vw"
-                      className="aspect-[16/9] h-auto w-full rounded-[12px] object-cover"
+                      className="aspect-[16/9] h-auto w-full rounded-[8px] object-cover"
                     />
                   </figure>
                 ))}
             </div>
-            <figure className="rd-surface overflow-hidden rounded-[20px] p-3" data-reveal>
+            <figure className="rd-surface overflow-hidden rounded-[20px] p-3">
               <Image
                 src={tallPhoto.src}
                 alt={tallPhoto.alt}
                 width={tallPhoto.width}
                 height={tallPhoto.height}
                 sizes="(min-width: 676px) 45vw, 90vw"
-                className="h-full w-full rounded-[12px] object-cover"
+                className="h-full w-full rounded-[8px] object-cover"
               />
             </figure>
           </div>
         </Container>
       </section>
 
-      <CtaBand title="Book your suspension in" stamp="Service">
-        <p>{servicesOutro}</p>
-      </CtaBand>
+      <CtaBand title="Book your suspension in" />
     </>
   );
 }

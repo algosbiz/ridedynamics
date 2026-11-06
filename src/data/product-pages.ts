@@ -35,6 +35,7 @@ export type ProductPageContent = {
   logo: PageImage;
   logoOnDark: boolean; // the logo file has its own black background
   lead: string;
+  storyTitle: string; // heading of the brand story, from a fact in it
   story: string[];
   storeLine: string; // the "go to our online store" sentence
   range: { image: PageImage; title: string; kicker: string }[];
@@ -58,6 +59,7 @@ export const suspensionPage: ProductPageContent = {
   logo: suspensionLogo,
   logoOnDark: false,
   lead: "Championship winning forks, shocks, springs and cartridges for road bikes, dirt bikes and cruisers.",
+  storyTitle: "Why we chose K-Tech",
   story: suspensionParagraphs.slice(0, -1),
   storeLine: lastOf(suspensionParagraphs),
   range: [
@@ -107,6 +109,7 @@ export const brakesPage: ProductPageContent = {
   logo: brakesLogo,
   logoOnDark: true,
   lead: "Italian brake, clutch and control components, made since 1969 and raced in MOTO 2, MOTO 3, WSBK and WSS.",
+  storyTitle: "Italian since 1969",
   story: brakesParagraphs.slice(0, -1),
   storeLine: lastOf(brakesParagraphs),
   range: [
@@ -158,6 +161,7 @@ export const lubricantsPage: ProductPageContent = {
   logo: lubricantsLogo,
   logoOnDark: false,
   lead: "High quality lubricants since 1928 and the official lubricant of the MCE British Superbike Series.",
+  storyTitle: "Tested in British Superbike",
   story: lubricantsParagraphs.slice(0, -1),
   storeLine: lastOf(lubricantsParagraphs),
   range: [

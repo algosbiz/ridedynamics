@@ -6,7 +6,7 @@ import Container from "@/components/ui/Container";
 import CtaBand from "@/components/ui/CtaBand";
 import DiecutCard from "@/components/ui/DiecutCard";
 import SectionHeading from "@/components/ui/SectionHeading";
-import ModelStage from "@/components/three/ModelStage";
+import HeroStage from "@/components/three/HeroStage";
 import { contactInfo } from "@/data/contact";
 import {
   homeCategories,
@@ -36,86 +36,64 @@ const brands = [
   { logo: lubricantsLogo, href: "/lubricants", dark: false },
 ];
 
+const categoryBrands = ["K-Tech", "Accossato", "Rock Oil"];
+
+const delay = (seconds: number) => ({ "--d": `${seconds}s` }) as React.CSSProperties;
+
 export default function HomePage() {
   return (
     <>
       {/* ---------- Hero ---------- */}
-      <section data-hero className="relative overflow-hidden pt-10 pb-16 laptop:pt-14 laptop:pb-24">
+      <section className="relative overflow-hidden pt-12 pb-16 laptop:pt-16 laptop:pb-20">
         {/* The scratched backdrop of the original site, kept as texture. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[300px] bg-[url(/images/common/site-backdrop.jpg)] bg-top bg-repeat-x opacity-60 [mask-image:linear-gradient(#000,transparent)]"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[300px] bg-[url(/images/common/site-backdrop.jpg)] bg-top bg-repeat-x opacity-50 [mask-image:linear-gradient(#000,transparent)]"
         />
-        <span
-          aria-hidden="true"
-          data-drift="-5"
-          className="rd-deboss pointer-events-none absolute right-[-6vw] bottom-0 font-cond text-[30vw] leading-[0.78] font-bold whitespace-nowrap uppercase select-none laptop:text-[19vw]"
-        >
-          Suspension
-        </span>
 
         <Container className="relative grid items-center gap-10 laptop:grid-cols-12 laptop:gap-8">
           <div className="laptop:col-span-7">
-            <p className="rd-rise flex items-center gap-3 font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
-              <span aria-hidden="true" className="h-px w-10 bg-rd-red/60" />
-              Gold Coast · Yatala QLD
-            </p>
+            <p className="rd-rise text-sm font-medium text-rd-muted">Gold Coast · Yatala QLD</p>
             <h1
-              className="rd-emboss rd-rise mt-5 font-cond text-[52px] leading-[0.94] font-bold tracking-[-1px] uppercase text-balance tablet:text-[76px] desktop:text-[96px]"
-              style={{ "--d": "0.08s" } as React.CSSProperties}
+              className="rd-emboss rd-rise mt-4 font-cond text-[44px] leading-[0.95] font-bold tracking-[-0.5px] uppercase text-balance tablet:text-[60px] desktop:text-[72px]"
+              style={delay(0.05)}
             >
               {homeTagline}
             </h1>
             <p
-              className="rd-rise mt-6 max-w-[52ch] text-[19px] leading-[1.55] text-rd-red"
-              style={{ "--d": "0.16s" } as React.CSSProperties}
+              className="rd-rise mt-6 max-w-[36rem] text-lg leading-[1.6] text-rd-gray"
+              style={delay(0.1)}
             >
               {homeLead}
             </p>
-            <div
-              className="rd-rise mt-8 flex flex-wrap gap-3"
-              style={{ "--d": "0.24s" } as React.CSSProperties}
-            >
-              <ButtonLink href="#products">Shop by product</ButtonLink>
+            <div className="rd-rise mt-8 flex flex-wrap gap-3" style={delay(0.15)}>
+              <ButtonLink href="#products">Browse products</ButtonLink>
               <ButtonLink href={contactInfo.phoneHref} variant="ghost">
                 Call {contactInfo.phone}
               </ButtonLink>
             </div>
           </div>
 
-          <div className="laptop:col-span-5" data-hero-stage>
-            <div className="relative mx-auto aspect-square w-full max-w-[360px] laptop:max-w-[520px]">
-              <div
-                aria-hidden="true"
-                className="absolute inset-[6%] rounded-full"
-                style={{
-                  background:
-                    "radial-gradient(circle at 50% 50%, rgba(237,28,36,0.24), transparent 62%), repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.045) 0 1px, transparent 1px 22px)",
-                  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06)",
-                }}
-              />
-              <ModelStage
-                name="suspension"
-                fallback={{
-                  src: homeCategories[0].image,
-                  alt: homeCategories[0].alt,
-                  width: 184,
-                  height: 281,
-                }}
-                label="K-Tech suspension, 3D view"
-                preload
-                className="absolute inset-0"
-              />
-            </div>
+          <div className="laptop:col-span-5">
+            <HeroStage
+              name="suspension"
+              fallback={{
+                src: homeCategories[0].image,
+                alt: homeCategories[0].alt,
+                width: 184,
+                height: 281,
+              }}
+              label="K-Tech suspension, 3D view"
+              className="max-w-[360px] laptop:max-w-[520px]"
+            />
           </div>
         </Container>
       </section>
 
-      {/* ---------- 01 Products: die-cut cards ---------- */}
-      <section id="products" className="py-16 laptop:py-24" aria-labelledby="products-title">
+      {/* ---------- Products: die-cut cards ---------- */}
+      <section id="products" className="py-16 laptop:py-20" aria-labelledby="products-title">
         <Container>
           <SectionHeading
-            number="01"
             kicker="Products"
             title="Suspension, brakes and lubricants"
             id="products-title"
@@ -123,42 +101,39 @@ export default function HomePage() {
             <p>{homeStoreNote}</p>
           </SectionHeading>
 
-          <div className="mt-24 grid gap-x-6 gap-y-24 tablet:grid-cols-2 laptop:grid-cols-3">
+          <div className="mt-16 grid gap-x-6 gap-y-16 tablet:grid-cols-2 laptop:mt-20 laptop:grid-cols-3 laptop:gap-y-20">
             {homeCategories.map((category, index) => (
               <DiecutCard
                 key={category.href}
                 href={category.href}
                 image={{ src: category.image, alt: category.alt, width: 184, height: 281 }}
                 title={category.caption.join(" ")}
-                kicker={["K-Tech", "Accossato", "Rock Oil"][index]}
-                number={String(index + 1).padStart(2, "0")}
+                kicker={categoryBrands[index]}
               />
             ))}
           </div>
         </Container>
       </section>
 
-      {/* ---------- 02 About the shop ---------- */}
-      <section className="py-16 laptop:py-24" aria-labelledby="shop-title">
+      {/* ---------- The workshop ---------- */}
+      <section className="py-16 laptop:py-20" aria-labelledby="shop-title">
         <Container className="grid gap-12 laptop:grid-cols-12">
           <div className="laptop:col-span-5">
             <SectionHeading
-              number="02"
               kicker="The workshop"
               title="Suspension tuning, first and foremost"
               id="shop-title"
             />
           </div>
-          <div className="space-y-5 laptop:col-span-7 laptop:pt-10">
+          <div className="space-y-5 laptop:col-span-7 laptop:pt-8">
             {homeIntro.map((paragraph, index) => (
               <p
                 key={paragraph}
                 className={
                   index === 0
-                    ? "text-[19px] leading-[1.6] text-rd-light/90"
-                    : "text-[16px] leading-[1.7]"
+                    ? "text-lg leading-[1.65] text-rd-light"
+                    : "text-base leading-[1.7] text-rd-gray"
                 }
-                data-reveal
               >
                 {paragraph}
               </p>
@@ -171,35 +146,32 @@ export default function HomePage() {
 
         <Container className="mt-16">
           <figure className="rd-surface overflow-hidden rounded-[20px] p-3" data-reveal>
-            <div data-parallax="0.04">
-              <Image
-                src="/images/home/ride-dynamics-racing-suspension-gold-coast.jpg"
-                alt="Ride Dynamics racing suspension, Gold Coast"
-                width={655}
-                height={202}
-                sizes="(min-width: 1240px) 1176px, 95vw"
-                className="h-auto w-full rounded-[12px]"
-              />
-            </div>
+            <Image
+              src="/images/home/ride-dynamics-racing-suspension-gold-coast.jpg"
+              alt="Ride Dynamics racing suspension, Gold Coast"
+              width={655}
+              height={202}
+              sizes="(min-width: 1240px) 1176px, 95vw"
+              className="h-auto w-full rounded-[8px]"
+            />
           </figure>
         </Container>
       </section>
 
-      {/* ---------- 03 Brands ---------- */}
-      <section className="py-16 laptop:py-24" aria-labelledby="brands-title">
+      {/* ---------- Brands ---------- */}
+      <section className="py-16 laptop:py-20" aria-labelledby="brands-title">
         <Container>
           <SectionHeading
-            number="03"
             kicker="Our brands"
             title="Proven winners the world over"
             id="brands-title"
           />
-          <ul className="mt-12 grid gap-4 tablet:grid-cols-3">
+          <ul className="mt-12 grid gap-4 tablet:grid-cols-3" data-reveal>
             {brands.map((brand) => (
-              <li key={brand.href} data-reveal>
+              <li key={brand.href}>
                 <Link
                   href={brand.href}
-                  className={`group flex h-[150px] items-center justify-center rounded-[18px] px-8 shadow-[inset_0_3px_10px_rgba(0,0,0,0.45),0_1px_0_rgba(255,255,255,0.06)] transition-transform duration-300 hover:-translate-y-1 ${
+                  className={`flex h-36 items-center justify-center rounded-[16px] px-8 shadow-[inset_0_2px_6px_rgba(0,0,0,0.35)] transition-opacity duration-150 ease-rd hover:opacity-90 ${
                     brand.dark ? "bg-black" : "bg-rd-paper"
                   }`}
                 >
@@ -209,7 +181,7 @@ export default function HomePage() {
                     width={brand.logo.width}
                     height={brand.logo.height}
                     sizes="300px"
-                    className="h-auto max-h-[90px] w-auto max-w-full"
+                    className="h-auto max-h-20 w-auto max-w-full"
                   />
                 </Link>
               </li>
@@ -219,7 +191,7 @@ export default function HomePage() {
       </section>
 
       <CtaBand title="Browse, choose, ride">
-        <p className="text-rd-red">{homeStoreLead}</p>
+        <p>{homeStoreLead}</p>
       </CtaBand>
     </>
   );

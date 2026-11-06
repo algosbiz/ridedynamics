@@ -8,21 +8,19 @@ export type FaqItem = {
 
 export default function Faq({ items }: { items: FaqItem[] }) {
   return (
-    <div className="rd-dash border-t" data-reveal>
+    <div className="rd-dash border-t">
       {items.map((item) => (
-        <details key={item.question} className="rd-faq rd-dash group border-b">
-          <summary className="flex cursor-pointer items-center justify-between gap-6 py-5 font-cond text-[20px] leading-[1.25] font-bold text-rd-light uppercase transition-colors hover:text-white tablet:text-[22px]">
+        <details key={item.question} className="rd-faq rd-dash border-b">
+          <summary className="flex min-h-16 cursor-pointer items-center justify-between gap-6 py-4 text-lg leading-[1.4] font-medium text-rd-light transition-colors duration-150 ease-rd hover:text-white">
             {item.question}
             <span
               aria-hidden="true"
-              className="rd-faq-icon grid h-9 w-9 flex-none place-items-center rounded-full text-[22px] text-rd-red shadow-[inset_0_0_0_1px_rgba(237,28,36,0.5)] transition-transform duration-300"
+              className="rd-faq-icon flex-none text-[20px] leading-none text-rd-muted transition-transform duration-200 ease-rd"
             >
               +
             </span>
           </summary>
-          <p className="max-w-[68ch] pb-6 text-[16px] leading-[1.65] text-rd-gray">
-            {item.answer}
-          </p>
+          <p className="max-w-[68ch] pb-6 text-base leading-[1.7] text-rd-gray">{item.answer}</p>
         </details>
       ))}
     </div>

@@ -12,13 +12,14 @@ type ButtonLinkProps = {
 };
 
 const base =
-  "group inline-flex min-h-[48px] items-center justify-center gap-3 rounded-full px-6 font-cond text-[15px] font-bold tracking-[2px] uppercase transition-[background-color,color,box-shadow] duration-200";
+  "group inline-flex h-12 items-center justify-center gap-2 rounded-[10px] px-5 text-base font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-rd active:scale-[0.98]";
 
 const variants = {
+  // The one red thing in a section: the main action.
   primary:
-    "bg-rd-red text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_10px_24px_-10px_rgba(237,28,36,0.8)] hover:bg-[#ff2a32]",
+    "bg-rd-red text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] hover:bg-[#d8141c]",
   ghost:
-    "text-rd-light shadow-[inset_0_0_0_1px_rgba(214,214,214,0.28)] hover:bg-white/5 hover:shadow-[inset_0_0_0_1px_rgba(214,214,214,0.6)]",
+    "bg-rd-surface-2 text-rd-light shadow-[inset_0_0_0_1px_rgba(228,228,230,0.1)] hover:bg-[#252529]",
 };
 
 export default function ButtonLink({
@@ -31,7 +32,7 @@ export default function ButtonLink({
   const arrow = (
     <span
       aria-hidden="true"
-      className="transition-transform duration-200 group-hover:translate-x-1"
+      className="transition-transform duration-150 ease-rd group-hover:translate-x-0.5"
     >
       →
     </span>

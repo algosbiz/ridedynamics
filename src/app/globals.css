@@ -15,9 +15,12 @@
   --color-rd-red-dark: #a41c24; /* the bar at the very bottom of the page */
   --color-rd-black: #0e0e0f; /* menu bar */
   --color-rd-panel: #000000;
-  --color-rd-gray: #8f8f8f; /* body text */
+  /* Three text roles on dark: light (primary), gray (secondary, body
+     text, the original site's colour) and muted (labels and meta). */
+  --color-rd-light: #e4e4e6;
+  --color-rd-gray: #8f8f8f;
   --color-rd-gray-hover: #a8a8a8;
-  --color-rd-light: #d6d6d6; /* headings and emphasis on dark */
+  --color-rd-muted: #7d7d83;
   --color-rd-yellow: #fdd900;
 
   /* Redesign surfaces: the page, a raised card face, and hairlines. */
@@ -25,9 +28,13 @@
   --color-rd-surface: #141416;
   --color-rd-surface-2: #1c1c1f;
   --color-rd-line: #2c2c30;
-  /* The inside of a die-cut window: the pale grey the original site
-     already used behind its product photos. */
+  /* Brand logo plates: the pale grey the original site used behind its
+     product photos. */
   --color-rd-paper: #f1f0ee;
+
+  /* One easing curve for every transition and GSAP tween
+     (GSAP's "power4.out" is the same shape). */
+  --ease-rd: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* franklin-gothic-urw -> Libre Franklin, franklin-gothic-urw-cond ->
      Archivo Narrow (closest free equivalents of the original Adobe Fonts). */
@@ -136,7 +143,9 @@ body {
   right: var(--win-x);
   height: var(--win-h);
   border-radius: var(--win-radius);
-  background: var(--color-rd-paper);
+  /* Pure white, the same white the product photos were shot on, so the
+     photo's own edge disappears into the window. */
+  background: #ffffff;
 }
 
 .rd-diecut-lift {
@@ -151,14 +160,13 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.4s var(--ease-rd);
 }
 
 .rd-diecut-img img {
   max-height: 100%;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.35));
 }
 
 .rd-diecut-face {
@@ -236,7 +244,7 @@ body {
    --------------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
   .rd-rise {
-    animation: rd-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: rd-rise 0.5s var(--ease-rd) both;
     animation-delay: var(--d, 0s);
   }
 }
@@ -244,7 +252,7 @@ body {
 @keyframes rd-rise {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;

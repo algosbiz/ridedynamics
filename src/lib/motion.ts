@@ -4,19 +4,17 @@
 // wide screens for visitors who have not asked for reduced motion. Phones
 // therefore never download GSAP at all.
 //
-// Only `transform` and `opacity` are animated, so nothing here causes the
-// browser to recalculate layout while scrolling.
+// Motion is kept to what explains something. Only `transform` and
+// `opacity` are animated, with one easing curve ("power4.out", the same
+// shape as --ease-rd in globals.css).
 //
 // Attributes understood:
-//   data-reveal              fade and rise in when scrolled into view
-//   data-diecut              die-cut card: its picture rises out of the
-//                            card as the card travels up the screen
-//   data-parallax="0.15"     drifts at a different speed while scrolling
-//   data-drift="-12"         sideways drift (xPercent) for decorative words
-//   data-hero / data-hero-stage
-//                            the hero's 3D stage sinks back as you leave
-//   data-steps / data-steps-bar / data-step
-//                            numbered list with a progress rail
+//   data-reveal       a section heading or a group of cards fades and
+//                     rises in once, when scrolled into view
+//   data-diecut       die-cut card: its part rises out of the card as the
+//                     card travels up the screen (the site's signature)
+//   data-steps / data-steps-bar / data-step-num
+//                     numbered list whose rail fills as you read down
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -26,14 +24,15 @@ gsap.registerPlugin(ScrollTrigger);
 export const MOTION_QUERY =
   "(min-width: 851px) and (prefers-reduced-motion: no-preference)";
 
+const EASE = "power4.out";
+
 export function initMotion(root: HTMLElement): () => void {
   const mm = gsap.matchMedia();
 
   mm.add(
     MOTION_QUERY,
     () => {
-      const q = <T extends Element = HTMLElement>(selector: string) =>
-        gsap.utils.toArray<T>(selector, root);
+      const q = (selector: string) => gsap.utils.toArray<HTMLElement>(selector, root);
 
       // ---- Reveal on scroll ------------------------------------------
       // Anything already on screen when this runs is left alone, so the
@@ -43,7 +42,7 @@ export function initMotion(root: HTMLElement): () => void {
         (el) => el.getBoundingClientRect().top > fold,
       );
       if (reveal.length) {
-        gsap.set(reveal, { opacity: 0, y: 28 });
+        gsap.set(reveal, { opacity: 0, y: 12 });
         ScrollTrigger.batch(reveal, {
           start: "top 94%",
           once: true,
@@ -51,20 +50,20 @@ export function initMotion(root: HTMLElement): () => void {
             gsap.to(batch, {
               opacity: 1,
               y: 0,
-              duration: 0.6,
-              ease: "power3.out",
-              stagger: 0.06,
+              duration: 0.5,
+              ease: EASE,
+              stagger: 0.05,
               overwrite: true,
             }),
         });
       }
 
       // ---- Die-cut cards: the part rises out of its box ----------------
+      // Starts tucked low in the box and ends poking out over the top
+      // edge of the card by the time the card nears the top of the screen.
       q("[data-diecut]").forEach((card) => {
         const lift = card.querySelector(".rd-diecut-lift");
         if (!lift) return;
-        // Starts tucked low in the box and ends poking out over the top
-        // edge of the card by the time the card nears the top of the screen.
         gsap.fromTo(
           lift,
           { yPercent: 14 },
@@ -79,57 +78,6 @@ export function initMotion(root: HTMLElement): () => void {
             },
           },
         );
-      });
-
-      // ---- Parallax -----------------------------------------------------
-      q("[data-parallax]").forEach((el) => {
-        const speed = parseFloat(el.dataset.parallax || "0.15");
-        gsap.fromTo(
-          el,
-          { yPercent: speed * 100 },
-          {
-            yPercent: -speed * 100,
-            ease: "none",
-            scrollTrigger: {
-              trigger: el.parentElement ?? el,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          },
-        );
-      });
-
-      q("[data-drift]").forEach((el) => {
-        const amount = parseFloat(el.dataset.drift || "-10");
-        gsap.to(el, {
-          xPercent: amount,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el.parentElement ?? el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-      });
-
-      // ---- Hero: the stage sinks back as the visitor scrolls away -------
-      q("[data-hero]").forEach((hero) => {
-        const stage = hero.querySelector("[data-hero-stage]");
-        if (!stage) return;
-        gsap.to(stage, {
-          yPercent: 10,
-          scale: 0.92,
-          opacity: 0.4,
-          ease: "none",
-          scrollTrigger: {
-            trigger: hero,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
       });
 
       // ---- Numbered steps: a rail fills as you read down ----------------
@@ -155,10 +103,11 @@ export function initMotion(root: HTMLElement): () => void {
         list.querySelectorAll<HTMLElement>("[data-step-num]").forEach((num) => {
           gsap.fromTo(
             num,
-            { opacity: 0.3 },
+            { opacity: 0.35 },
             {
               opacity: 1,
-              duration: 0.4,
+              duration: 0.3,
+              ease: EASE,
               scrollTrigger: {
                 trigger: num,
                 start: "top 72%",

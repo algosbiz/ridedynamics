@@ -14,19 +14,13 @@ type SpecTableProps = {
 
 export default function SpecTable({ specs, caption, className = "" }: SpecTableProps) {
   return (
-    <dl
-      className={`rd-dash border-t text-[15px] leading-[1.5] ${className}`}
-      aria-label={caption}
-      data-reveal
-    >
+    <dl className={`rd-dash border-t text-[15px] leading-[1.6] ${className}`} aria-label={caption}>
       {specs.map((spec) => (
         <div
           key={spec.label}
           className="rd-dash grid grid-cols-1 gap-1 border-b py-4 tablet:grid-cols-[minmax(140px,34%)_1fr] tablet:gap-6"
         >
-          <dt className="font-cond text-[13px] font-bold tracking-[3px] text-rd-gray uppercase">
-            {spec.label}
-          </dt>
+          <dt className="text-sm font-medium text-rd-muted">{spec.label}</dt>
           <dd className="text-rd-light">{spec.value}</dd>
         </div>
       ))}

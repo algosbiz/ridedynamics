@@ -140,12 +140,16 @@ export async function createViewer(
 
   // ---- drag to turn -----------------------------------------------------
   let dragging = false;
+  // The slow turn only invites the first drag. Once the visitor has
+  // turned the part themselves it stays where they left it.
+  let autoSpin = true;
   let lastX = 0;
   let velocity = 0; // radians per frame from the last drag
   let pointerId = -1;
 
   const onDown = (event: PointerEvent) => {
     dragging = true;
+    autoSpin = false;
     pointerId = event.pointerId;
     lastX = event.clientX;
     velocity = 0;
@@ -182,10 +186,12 @@ export async function createViewer(
     last = now;
     if (!dragging) {
       velocity *= 0.92;
-      turntable.rotation.y += velocity + AUTO_SPIN * dt;
+      turntable.rotation.y += velocity + (autoSpin ? AUTO_SPIN * dt : 0);
     }
     draw();
-    frame = active ? requestAnimationFrame(tick) : 0;
+    // With nothing moving any more, stop drawing until the next drag.
+    const still = !dragging && !autoSpin && Math.abs(velocity) < 0.0001;
+    frame = active && !still ? requestAnimationFrame(tick) : 0;
   }
 
   function wake() {
@@ -207,8 +213,9 @@ export async function createViewer(
       }
     },
     nudge(radians) {
+      autoSpin = false;
       turntable.rotation.y += radians;
-      if (!active) draw();
+      draw();
     },
     dispose() {
       active = false;

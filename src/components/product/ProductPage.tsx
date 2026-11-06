@@ -6,14 +6,16 @@ import DiecutCard from "@/components/ui/DiecutCard";
 import Faq from "@/components/ui/Faq";
 import SectionHeading from "@/components/ui/SectionHeading";
 import SpecTable from "@/components/ui/SpecTable";
-import ModelStage from "@/components/three/ModelStage";
+import HeroStage from "@/components/three/HeroStage";
 import { contactInfo } from "@/data/contact";
 import { showOnlineStoreLink } from "@/data/navigation";
 import type { ProductPageContent } from "@/data/product-pages";
 
 // The shared layout of the three product pages (Suspension Parts, Brake
 // Components, Lubricants): hero with the 3D part, the range as die-cut
-// cards, the brand story with a spec sheet, photos, FAQ, and a buy band.
+// cards, the brand story with its spec sheet, photos, FAQ, and a buy band.
+
+const delay = (seconds: number) => ({ "--d": `${seconds}s` }) as React.CSSProperties;
 
 export default function ProductPage({ content }: { content: ProductPageContent }) {
   const { brand } = content;
@@ -21,107 +23,59 @@ export default function ProductPage({ content }: { content: ProductPageContent }
 
   return (
     <>
-      {/* ---------- 01 Hero ---------- */}
-      <section data-hero className="relative overflow-hidden pt-10 pb-16 laptop:pt-16 laptop:pb-24">
-        <span
-          aria-hidden="true"
-          data-drift="-6"
-          className="rd-deboss pointer-events-none absolute top-6 right-[-4vw] font-cond text-[28vw] leading-[0.8] font-bold whitespace-nowrap uppercase select-none laptop:text-[18vw]"
-        >
-          {brand}
-        </span>
-
-        <Container className="relative grid items-center gap-10 laptop:grid-cols-12 laptop:gap-8">
+      {/* ---------- Hero ---------- */}
+      <section className="pt-12 pb-16 laptop:pt-16 laptop:pb-20">
+        <Container className="grid items-center gap-10 laptop:grid-cols-12 laptop:gap-8">
           <div className="laptop:col-span-6">
-            <p className="rd-rise flex items-center gap-3 font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
-              <span aria-hidden="true">01</span>
-              <span aria-hidden="true" className="h-px w-10 bg-rd-red/60" />
-              {brand}
-            </p>
+            <p className="rd-rise text-sm font-medium text-rd-muted">{brand}</p>
             <h1
-              className="rd-emboss rd-rise mt-5 font-cond text-[56px] leading-[0.92] font-bold tracking-[-1px] uppercase text-balance tablet:text-[84px] desktop:text-[104px]"
-              style={{ "--d": "0.08s" } as React.CSSProperties}
+              className="rd-emboss rd-rise mt-4 font-cond text-[44px] leading-[0.95] font-bold tracking-[-0.5px] uppercase text-balance tablet:text-[64px] desktop:text-[76px]"
+              style={delay(0.05)}
             >
               {content.title}
             </h1>
             <p
-              className="rd-rise mt-6 max-w-[46ch] text-[19px] leading-[1.55] text-rd-light/85"
-              style={{ "--d": "0.16s" } as React.CSSProperties}
+              className="rd-rise mt-6 max-w-[36rem] text-lg leading-[1.6] text-rd-gray"
+              style={delay(0.1)}
             >
               {content.lead}
             </p>
-
-            <div
-              className="rd-rise mt-8 flex flex-wrap items-center gap-3"
-              style={{ "--d": "0.24s" } as React.CSSProperties}
-            >
+            <div className="rd-rise mt-8 flex flex-wrap items-center gap-3" style={delay(0.15)}>
               <ButtonLink href="#range">See the range</ButtonLink>
               <ButtonLink href={contactInfo.phoneHref} variant="ghost">
                 Call {contactInfo.phone}
               </ButtonLink>
             </div>
-
-            <div
-              className={`rd-rise mt-10 inline-flex items-center rounded-[14px] px-6 py-4 shadow-[inset_0_2px_6px_rgba(0,0,0,0.35),0_1px_0_rgba(255,255,255,0.06)] ${
-                content.logoOnDark ? "bg-black" : "bg-rd-paper"
-              }`}
-              style={{ "--d": "0.32s" } as React.CSSProperties}
-            >
-              <Image
-                src={content.logo.src}
-                alt={content.logo.alt}
-                width={content.logo.width}
-                height={content.logo.height}
-                className="h-[56px] w-auto"
-              />
-            </div>
           </div>
 
-          <div className="laptop:col-span-6" data-hero-stage>
-            <div className="relative mx-auto aspect-square w-full max-w-[380px] laptop:max-w-[560px]">
-              {/* The turntable the part sits on. */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-[6%] rounded-full"
-                style={{
-                  background:
-                    "radial-gradient(circle at 50% 50%, rgba(237,28,36,0.22), transparent 62%), repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.045) 0 1px, transparent 1px 22px)",
-                  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06)",
-                }}
-              />
-              <ModelStage
-                name={content.model}
-                fallback={content.modelFallback}
-                label={`${brand} ${content.title}, 3D view`}
-                preload
-                className="absolute inset-0"
-              />
-            </div>
+          <div className="laptop:col-span-6">
+            <HeroStage
+              name={content.model}
+              fallback={content.modelFallback}
+              label={`${brand} ${content.title}, 3D view`}
+              className="max-w-[380px] laptop:max-w-[560px]"
+            />
           </div>
         </Container>
       </section>
 
-      {/* ---------- 02 The range ---------- */}
-      <section id="range" className="py-16 laptop:py-24" aria-labelledby="range-title">
+      {/* ---------- The range ---------- */}
+      <section id="range" className="py-16 laptop:py-20" aria-labelledby="range-title">
         <Container>
-          <SectionHeading
-            number="02"
-            kicker="The range"
-            title={`${brand} parts we stock`}
-            id="range-title"
-          />
+          <SectionHeading kicker="The range" title={`${brand} parts we stock`} id="range-title" />
+          {/* Extra room above each row: the parts lift out over the top
+              edge of their cards. */}
           <div
-            className={`mt-20 grid gap-x-6 gap-y-20 tablet:grid-cols-2 ${
+            className={`mt-16 grid gap-x-6 gap-y-16 tablet:grid-cols-2 laptop:mt-20 laptop:gap-y-20 ${
               content.range.length === 4 ? "desktop:grid-cols-4" : "laptop:grid-cols-3"
             }`}
           >
-            {content.range.map((item, index) => (
+            {content.range.map((item) => (
               <DiecutCard
                 key={item.image.src}
                 image={item.image}
                 title={item.title}
                 kicker={item.kicker}
-                number={String(index + 1).padStart(2, "0")}
                 imageScale="native"
               />
             ))}
@@ -129,32 +83,38 @@ export default function ProductPage({ content }: { content: ProductPageContent }
         </Container>
       </section>
 
-      {/* ---------- 03 Story + spec sheet ---------- */}
-      <section className="py-16 laptop:py-24" aria-labelledby="story-title">
+      {/* ---------- Story + spec sheet ---------- */}
+      <section className="py-16 laptop:py-20" aria-labelledby="story-title">
         <Container>
-          <SectionHeading
-            number="03"
-            kicker={`Why ${brand}`}
-            title={`Proven on the track. Built for your bike.`}
-            id="story-title"
-          />
+          <SectionHeading kicker={`Why ${brand}`} title={content.storyTitle} id="story-title" />
           <div className="mt-12 grid gap-12 laptop:grid-cols-12">
             <div className="space-y-5 laptop:col-span-7">
-              <p className="text-[19px] leading-[1.6] text-rd-light/90" data-reveal>
-                {firstStory}
-              </p>
+              <p className="text-lg leading-[1.65] text-rd-light">{firstStory}</p>
               {restStory.map((paragraph) => (
-                <p key={paragraph} className="text-[16px] leading-[1.7]" data-reveal>
+                <p key={paragraph} className="text-base leading-[1.7] text-rd-gray">
                   {paragraph}
                 </p>
               ))}
             </div>
             <aside className="laptop:col-span-5" aria-label={`${brand} at a glance`}>
               <div className="laptop:sticky laptop:top-[calc(var(--rd-header-h)+32px)]">
-                <p className="mb-4 font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
-                  Spec sheet
-                </p>
-                <SpecTable specs={content.specs} caption={`${brand} at a glance`} />
+                {/* The brand's own logo heads its spec sheet, like the
+                    maker's label on a parts box. */}
+                <div
+                  className={`flex h-24 items-center justify-center rounded-[16px] px-6 shadow-[inset_0_2px_6px_rgba(0,0,0,0.35)] ${
+                    content.logoOnDark ? "bg-black" : "bg-rd-paper"
+                  }`}
+                >
+                  <Image
+                    src={content.logo.src}
+                    alt={content.logo.alt}
+                    width={content.logo.width}
+                    height={content.logo.height}
+                    sizes="240px"
+                    className="h-auto max-h-16 w-auto max-w-full"
+                  />
+                </div>
+                <SpecTable className="mt-6" specs={content.specs} caption={`${brand} at a glance`} />
               </div>
             </aside>
           </div>
@@ -167,14 +127,12 @@ export default function ProductPage({ content }: { content: ProductPageContent }
           <Container>
             {/* The photo files are small, so each frame is sized to the
                 photo (at most 1.5x) instead of stretching it. */}
-            <div className="flex flex-wrap items-center justify-center gap-6">
-              {content.gallery.map((image, index) => (
+            <div className="flex flex-wrap items-center justify-center gap-6" data-reveal>
+              {content.gallery.map((image) => (
                 <figure
                   key={image.src}
                   className="rd-surface rounded-[20px] p-3"
                   style={{ width: `min(100%, ${Math.round(image.width * 1.5) + 24}px)` }}
-                  data-reveal
-                  data-parallax={index % 2 ? "0.08" : "0.03"}
                 >
                   <Image
                     src={image.src}
@@ -182,7 +140,7 @@ export default function ProductPage({ content }: { content: ProductPageContent }
                     width={image.width}
                     height={image.height}
                     sizes={`${Math.round(image.width * 1.5)}px`}
-                    className="h-auto w-full rounded-[12px]"
+                    className="h-auto w-full rounded-[8px]"
                   />
                 </figure>
               ))}
@@ -191,11 +149,11 @@ export default function ProductPage({ content }: { content: ProductPageContent }
         </section>
       )}
 
-      {/* ---------- 04 FAQ ---------- */}
-      <section className="py-16 laptop:py-24" aria-labelledby="faq-title">
+      {/* ---------- FAQ ---------- */}
+      <section className="py-16 laptop:py-20" aria-labelledby="faq-title">
         <Container className="grid gap-10 laptop:grid-cols-12">
           <div className="laptop:col-span-5">
-            <SectionHeading number="04" kicker="FAQ" title="Questions riders ask" id="faq-title" />
+            <SectionHeading kicker="FAQ" title="Questions riders ask" id="faq-title" />
           </div>
           <div className="laptop:col-span-7">
             <Faq items={content.faq} />
@@ -203,7 +161,7 @@ export default function ProductPage({ content }: { content: ProductPageContent }
         </Container>
       </section>
 
-      <CtaBand title={`Get ${brand} on your bike`} stamp={brand}>
+      <CtaBand title={`Get ${brand} on your bike`}>
         <p>
           {showOnlineStoreLink
             ? content.storeLine

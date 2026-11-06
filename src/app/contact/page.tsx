@@ -13,44 +13,34 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-const linkStyle = "text-rd-light underline decoration-rd-red/60 underline-offset-4 hover:text-white";
+const linkStyle =
+  "text-rd-light underline decoration-rd-muted underline-offset-4 transition-colors duration-150 ease-rd hover:text-white hover:decoration-rd-light";
+
+const delay = (seconds: number) => ({ "--d": `${seconds}s` }) as React.CSSProperties;
 
 export default function ContactPage() {
   const webAddress = site.productionUrl.replace(/^https?:\/\//, "");
 
   return (
-    <section data-hero className="relative overflow-hidden pt-10 pb-20 laptop:pt-16 laptop:pb-28">
-      <span
-        aria-hidden="true"
-        data-drift="-6"
-        className="rd-deboss pointer-events-none absolute right-[-4vw] bottom-0 font-cond text-[30vw] leading-[0.8] font-bold whitespace-nowrap uppercase select-none laptop:text-[20vw]"
-      >
-        Contact
-      </span>
-
-      <Container className="relative grid gap-12 laptop:grid-cols-12">
+    <section className="pt-12 pb-20 laptop:pt-16 laptop:pb-24">
+      <Container className="grid gap-12 laptop:grid-cols-12">
         <div className="laptop:col-span-6">
-          <p className="rd-rise flex items-center gap-3 font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
-            <span aria-hidden="true">01</span>
-            <span aria-hidden="true" className="h-px w-10 bg-rd-red/60" />
+          <p className="rd-rise text-sm font-medium text-rd-muted">
             Motorcycle suspension and brake specialist
           </p>
           <h1
-            className="rd-emboss rd-rise mt-5 font-cond text-[64px] leading-[0.92] font-bold uppercase tablet:text-[96px] desktop:text-[120px]"
-            style={{ "--d": "0.08s" } as React.CSSProperties}
+            className="rd-emboss rd-rise mt-4 font-cond text-[44px] leading-[0.95] font-bold uppercase tablet:text-[64px] desktop:text-[76px]"
+            style={delay(0.05)}
           >
             Contact
           </h1>
-          <div
-            className="rd-rise mt-8 flex flex-wrap gap-3"
-            style={{ "--d": "0.16s" } as React.CSSProperties}
-          >
+          <div className="rd-rise mt-8 flex flex-wrap gap-3" style={delay(0.1)}>
             <ButtonLink href={contactInfo.phoneHref}>Call {contactInfo.phone}</ButtonLink>
             <ButtonLink href={`mailto:${contactInfo.emails[0]}`} variant="ghost">
               Email us
             </ButtonLink>
           </div>
-          <div className="rd-rise mt-12 max-w-[420px]" style={{ "--d": "0.24s" } as React.CSSProperties}>
+          <div className="rd-rise mt-12 max-w-[420px]" style={delay(0.15)}>
             <Image
               src="/images/logo/ride-dynamics-logo.png"
               alt="Ride Dynamics"
@@ -63,17 +53,15 @@ export default function ContactPage() {
         </div>
 
         <div className="laptop:col-span-6 laptop:pt-8">
-          <div className="rd-surface rounded-[24px] p-6 tablet:p-10">
-            <p className="mb-4 font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
-              Details
-            </p>
+          <div className="rd-surface rounded-[20px] p-6 tablet:p-10">
+            <p className="mb-4 text-sm font-medium text-rd-muted">Details</p>
             <SpecTable
               caption="Contact details"
               specs={[
                 {
                   label: "Mobile",
                   value: (
-                    <a href={contactInfo.phoneHref} className={linkStyle}>
+                    <a href={contactInfo.phoneHref} className={`${linkStyle} tabular-nums`}>
                       {contactInfo.phone}
                     </a>
                   ),
@@ -103,7 +91,7 @@ export default function ContactPage() {
                   ),
                 },
                 { label: "Web", value: webAddress },
-                { label: "ABN", value: contactInfo.abn },
+                { label: "ABN", value: <span className="tabular-nums">{contactInfo.abn}</span> },
               ]}
             />
           </div>
