@@ -1,13 +1,12 @@
 "use client";
 
-// The drop-down menu used below 1151px wide, exactly like the original
-// site. This file needs "use client" because it remembers whether the
-// menu is open, which only the browser can do.
+// The drop-down menu used below 1151px wide. It needs "use client"
+// because it remembers whether the menu is open.
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { contactInfo } from "@/data/contact";
 import {
   navItems,
   onlineStoreLabel,
@@ -28,6 +27,8 @@ export default function MobileMenu() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  const close = () => setIsOpen(false);
+
   return (
     <div className="desktop:hidden">
       <button
@@ -36,52 +37,67 @@ export default function MobileMenu() {
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
         aria-label={isOpen ? "Close menu" : "Open menu"}
-        className="flex h-[36px] w-[50px] cursor-pointer items-center justify-center"
+        className="relative grid h-[44px] w-[44px] cursor-pointer place-items-center rounded-full bg-rd-surface shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]"
       >
-        <Image
-          src="/images/common/menu-icon-red.png"
-          alt=""
-          width={50}
-          height={30}
-          className="h-[30px] w-[50px]"
-        />
+        <span aria-hidden="true" className="relative block h-[12px] w-[20px]">
+          <span
+            className={`absolute left-0 h-[2px] w-full bg-rd-red transition-transform duration-300 ${
+              isOpen ? "top-[5px] rotate-45" : "top-0"
+            }`}
+          />
+          <span
+            className={`absolute left-0 h-[2px] w-full bg-rd-red transition-transform duration-300 ${
+              isOpen ? "top-[5px] -rotate-45" : "top-[10px]"
+            }`}
+          />
+        </span>
       </button>
 
       {isOpen && (
         <nav
           id="mobile-menu"
           aria-label="Main menu"
-          // The red backing is what shows through the 2px gaps between
-          // the items, giving the thin red separator lines the original
-          // has. Without it the page behind shows through instead.
-          className="bg-rd-red fixed top-[52px] right-0 left-0 z-40 flex flex-col gap-[2px]"
+          className="rd-grain fixed top-[var(--rd-header-h)] right-0 left-0 z-40 max-h-[calc(100dvh-var(--rd-header-h))] overflow-y-auto border-b border-white/[0.06] bg-rd-black px-4 pt-2 pb-6 shadow-[0_24px_40px_-12px_rgba(0,0,0,0.9)] tablet:px-6"
         >
-          {navItems.map((item) => {
-            const isCurrent = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                aria-current={isCurrent ? "page" : undefined}
-                className={`bg-rd-black flex h-[41px] items-center justify-center font-plain text-[14px] tracking-[2px] ${
-                  isCurrent ? "text-rd-red" : "text-rd-gray hover:text-rd-gray-hover"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-
-          {showOnlineStoreLink && (
-            <a
-              href={onlineStoreUrl}
-              onClick={() => setIsOpen(false)}
-              className="bg-rd-black text-rd-gray hover:text-rd-gray-hover flex h-[41px] items-center justify-center font-plain text-[14px] tracking-[2px]"
-            >
-              {onlineStoreLabel}
-            </a>
-          )}
+          <ul>
+            {navItems.map((item, index) => {
+              const isCurrent = pathname === item.href;
+              return (
+                <li key={item.href} className="rd-dash border-b">
+                  <Link
+                    href={item.href}
+                    onClick={close}
+                    aria-current={isCurrent ? "page" : undefined}
+                    className={`flex min-h-[52px] items-center gap-4 font-cond text-[20px] font-bold tracking-[1.5px] ${
+                      isCurrent ? "text-white" : "text-rd-gray hover:text-rd-light"
+                    }`}
+                  >
+                    <span aria-hidden="true" className="w-7 text-[13px] text-rd-red">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+            {showOnlineStoreLink && (
+              <li className="rd-dash border-b">
+                <a
+                  href={onlineStoreUrl}
+                  onClick={close}
+                  className="flex min-h-[52px] items-center pl-11 font-cond text-[20px] font-bold tracking-[1.5px] text-rd-yellow"
+                >
+                  {onlineStoreLabel}
+                </a>
+              </li>
+            )}
+          </ul>
+          <a
+            href={contactInfo.phoneHref}
+            className="mt-5 flex min-h-[52px] items-center justify-center rounded-full bg-rd-red font-cond text-[17px] font-bold tracking-[2px] text-white"
+          >
+            Call {contactInfo.phone}
+          </a>
         </nav>
       )}
     </div>

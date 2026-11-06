@@ -1,7 +1,6 @@
-// Centres page content and keeps it the same width as the original site.
-//
-// The original is 1065px wide on a large screen and roughly 74% of the
-// window on smaller ones, which is what the two width classes below do.
+// Centres page content: full width with a side gutter on phones, up to
+// 1240px on large screens. The header and footer use the same width so
+// everything lines up.
 
 type ContainerProps = {
   children: React.ReactNode;
@@ -10,7 +9,7 @@ type ContainerProps = {
 
 export default function Container({ children, className = "" }: ContainerProps) {
   return (
-    <div className={`mx-auto w-[74%] max-w-[1065px] desktop:w-[1065px] ${className}`}>
+    <div className={`mx-auto w-full max-w-[1240px] px-4 tablet:px-6 desktop:px-8 ${className}`}>
       {children}
     </div>
   );

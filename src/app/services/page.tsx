@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import PagePanel from "@/components/ui/PagePanel";
+import ButtonLink from "@/components/ui/ButtonLink";
+import Container from "@/components/ui/Container";
+import CtaBand from "@/components/ui/CtaBand";
+import NumberedSteps from "@/components/ui/NumberedSteps";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { contactInfo } from "@/data/contact";
 import {
   servicesBottomImages,
   servicesHeading,
@@ -18,96 +23,124 @@ export const metadata: Metadata = {
   alternates: { canonical: "/services" },
 };
 
-// On the original there is a blank line between every service except
-// between "Headset Bearing..." and "Triple Clamp...". Those two sit
-// directly under the item above them.
-const ITEMS_WITHOUT_A_GAP_ABOVE = [0, 3];
-
 export default function ServicesPage() {
+  const photos = [...servicesSideImages.slice(1), ...servicesBottomImages];
+  const tallPhoto = servicesSideImages[2];
+
   return (
-    // Content runs 291px to 1135px inside the panel: an 844px column.
-    <PagePanel desktopPadding="desktop:pt-[61px] desktop:pr-[110px] desktop:pb-[121px] desktop:pl-[111px]">
-      <div className="laptop:flex laptop:justify-between">
-        {/* ---------- Left: the list of services (454 of 844px) ---------- */}
-        <div className="laptop:mt-[51px] laptop:w-[53.79%]">
-          <h1 className="text-rd-gray text-center text-[30px] leading-[36px]">
-            {servicesHeading}
-          </h1>
+    <>
+      {/* ---------- Hero ---------- */}
+      <section data-hero className="relative overflow-hidden pt-10 pb-16 laptop:pt-16 laptop:pb-24">
+        <span
+          aria-hidden="true"
+          data-drift="-6"
+          className="rd-deboss pointer-events-none absolute top-4 right-[-4vw] font-cond text-[30vw] leading-[0.8] font-bold whitespace-nowrap uppercase select-none laptop:text-[20vw]"
+        >
+          Workshop
+        </span>
 
-          <p className="text-rd-gray mt-[17px] text-justify text-[16px] leading-[19px]">
-            {servicesIntro}
-          </p>
-
-          <p className="text-rd-gray mt-[17px] text-justify font-plain text-[14px] leading-[17px]">
-            {servicesListIntro}
-          </p>
-
-          <ul className="text-rd-gray font-plain text-[14px] leading-[17px]">
-            {servicesList.map((service, index) => (
-              <li
-                key={service}
-                className={
-                  ITEMS_WITHOUT_A_GAP_ABOVE.includes(index)
-                    ? "text-justify"
-                    : "mt-[17px] text-justify"
-                }
-              >
-                {/* The bullet is part of the look, so it is hidden from
-                    screen readers - the list already announces itself. */}
-                <span aria-hidden="true">{"• "}</span>
-                {service}
-              </li>
-            ))}
-          </ul>
-
-          <p className="text-rd-gray mt-[17px] text-justify font-plain text-[14px] leading-[17px]">
-            {servicesOutro}
-          </p>
-
-          {/* The two pictures below the list: 213 + 27 + 214 = 454px. */}
-          <div className="mt-[74px] flex flex-wrap items-start justify-between gap-[27px] laptop:flex-nowrap laptop:gap-0">
-            <Image
-              src={servicesBottomImages[0].src}
-              alt={servicesBottomImages[0].alt}
-              width={servicesBottomImages[0].width}
-              height={servicesBottomImages[0].height}
-              className="h-auto w-[46.92%]"
-            />
-            <Image
-              src={servicesBottomImages[1].src}
-              alt={servicesBottomImages[1].alt}
-              width={servicesBottomImages[1].width}
-              height={servicesBottomImages[1].height}
-              className="h-auto w-[47.14%]"
-            />
+        <Container className="relative grid items-center gap-10 laptop:grid-cols-12">
+          <div className="laptop:col-span-7">
+            <p className="rd-rise flex items-center gap-3 font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
+              <span aria-hidden="true">01</span>
+              <span aria-hidden="true" className="h-px w-10 bg-rd-red/60" />
+              Suspension · Brakes · Custom builds
+            </p>
+            <h1
+              className="rd-emboss rd-rise mt-5 font-cond text-[64px] leading-[0.92] font-bold uppercase tablet:text-[96px] desktop:text-[120px]"
+              style={{ "--d": "0.08s" } as React.CSSProperties}
+            >
+              {servicesHeading}
+            </h1>
+            <p
+              className="rd-rise mt-6 max-w-[56ch] text-[19px] leading-[1.6] text-rd-light/85"
+              style={{ "--d": "0.16s" } as React.CSSProperties}
+            >
+              {servicesIntro}
+            </p>
+            <div
+              className="rd-rise mt-8 flex flex-wrap gap-3"
+              style={{ "--d": "0.24s" } as React.CSSProperties}
+            >
+              <ButtonLink href="#list">What we do</ButtonLink>
+              <ButtonLink href={contactInfo.phoneHref} variant="ghost">
+                Book on {contactInfo.phone}
+              </ButtonLink>
+            </div>
           </div>
-        </div>
+          <div className="laptop:col-span-5" data-hero-stage>
+            <div className="rd-surface relative mx-auto aspect-square w-full max-w-[340px] rounded-full p-10 laptop:max-w-[420px]">
+              <Image
+                src={servicesSideImages[0].src}
+                alt={servicesSideImages[0].alt}
+                width={servicesSideImages[0].width}
+                height={servicesSideImages[0].height}
+                preload
+                className="h-full w-full rounded-full object-contain"
+              />
+            </div>
+          </div>
+        </Container>
+      </section>
 
-        {/* ---------- Right: the workshop pictures (326 of 844px) ---------- */}
-        <div className="mt-[40px] flex flex-col items-end laptop:mt-0 laptop:w-[38.63%]">
-          <Image
-            src={servicesSideImages[0].src}
-            alt={servicesSideImages[0].alt}
-            width={servicesSideImages[0].width}
-            height={servicesSideImages[0].height}
-            className="h-auto w-[42.33%]"
-          />
-          <Image
-            src={servicesSideImages[1].src}
-            alt={servicesSideImages[1].alt}
-            width={servicesSideImages[1].width}
-            height={servicesSideImages[1].height}
-            className="mt-[52px] h-auto w-full"
-          />
-          <Image
-            src={servicesSideImages[2].src}
-            alt={servicesSideImages[2].alt}
-            width={servicesSideImages[2].width}
-            height={servicesSideImages[2].height}
-            className="mt-[65px] h-auto w-full"
-          />
-        </div>
-      </div>
-    </PagePanel>
+      {/* ---------- 02 The numbered list of services ---------- */}
+      <section id="list" className="py-16 laptop:py-24" aria-labelledby="list-title">
+        <Container className="grid gap-12 laptop:grid-cols-12">
+          <div className="laptop:col-span-4">
+            <div className="laptop:sticky laptop:top-[calc(var(--rd-header-h)+32px)]">
+              <SectionHeading number="02" kicker="What we do" title="Ten jobs, done properly" id="list-title">
+                <p>{servicesListIntro}</p>
+              </SectionHeading>
+            </div>
+          </div>
+          <div className="laptop:col-span-8">
+            <NumberedSteps items={servicesList.map((text) => ({ text }))} />
+            <p className="mt-12 max-w-[60ch] pl-[72px] text-[16px] leading-[1.65] tablet:pl-[96px]" data-reveal>
+              {servicesOutro}
+            </p>
+          </div>
+        </Container>
+      </section>
+
+      {/* ---------- Photos ---------- */}
+      <section className="py-8 laptop:py-12" aria-label="Workshop photos">
+        <Container>
+          {/* The tall custom-build photo stands on the right; the three
+              landscape photos stack on the left. */}
+          <div className="grid gap-6 tablet:grid-cols-2">
+            <div className="grid gap-6">
+              {photos
+                .filter((image) => image !== tallPhoto)
+                .map((image) => (
+                  <figure key={image.src} className="rd-surface overflow-hidden rounded-[20px] p-3" data-reveal>
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={image.width}
+                      height={image.height}
+                      sizes="(min-width: 676px) 45vw, 90vw"
+                      className="aspect-[16/9] h-auto w-full rounded-[12px] object-cover"
+                    />
+                  </figure>
+                ))}
+            </div>
+            <figure className="rd-surface overflow-hidden rounded-[20px] p-3" data-reveal>
+              <Image
+                src={tallPhoto.src}
+                alt={tallPhoto.alt}
+                width={tallPhoto.width}
+                height={tallPhoto.height}
+                sizes="(min-width: 676px) 45vw, 90vw"
+                className="h-full w-full rounded-[12px] object-cover"
+              />
+            </figure>
+          </div>
+        </Container>
+      </section>
+
+      <CtaBand title="Book your suspension in" stamp="Service">
+        <p>{servicesOutro}</p>
+      </CtaBand>
+    </>
   );
 }

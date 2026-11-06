@@ -3,74 +3,264 @@
 /*
   Ride Dynamics design tokens.
 
-  Every colour and size below was measured from the live original site
-  (https://www.ridedynamics.com.au) rather than guessed by eye.
-  Changing a value here changes it everywhere on the site.
+  The brand colours were measured from the original site
+  (https://www.ridedynamics.com.au). The surface/line shades are new for
+  the redesign and are only darker or lighter steps of the same black.
 
   Tailwind v4 turns these into utility classes automatically, so
   `--color-rd-red` becomes `text-rd-red`, `bg-rd-red`, `border-rd-red`.
 */
 @theme {
-  --color-rd-red: #ed1c24; /* brand red: active menu link, button outlines */
+  --color-rd-red: #ed1c24; /* brand red */
   --color-rd-red-dark: #a41c24; /* the bar at the very bottom of the page */
-  --color-rd-black: #0e0e0f; /* the menu bar across the top */
-  --color-rd-panel: #000000; /* the black panel each page sits on */
-  --color-rd-gray: #8f8f8f; /* body text and inactive menu links */
-  --color-rd-gray-hover: #a8a8a8; /* menu link hover colour */
-  --color-rd-yellow: #fdd900; /* footer service words and small links */
+  --color-rd-black: #0e0e0f; /* menu bar */
+  --color-rd-panel: #000000;
+  --color-rd-gray: #8f8f8f; /* body text */
+  --color-rd-gray-hover: #a8a8a8;
+  --color-rd-light: #d6d6d6; /* headings and emphasis on dark */
+  --color-rd-yellow: #fdd900;
 
-  /* Fonts. The originals are Adobe Fonts (Typekit) faces that cannot be
-     reused off that domain, so we load the closest free equivalents:
-       franklin-gothic-urw       -> Libre Franklin
-       franklin-gothic-urw-cond  -> Archivo Narrow
-     The original page also asks for open-sans / league-gothic, but those
-     never load on the live site any more and fall back to plain Arial,
-     so `--font-plain` matches what visitors actually see today. */
+  /* Redesign surfaces: the page, a raised card face, and hairlines. */
+  --color-rd-ink: #09090a;
+  --color-rd-surface: #141416;
+  --color-rd-surface-2: #1c1c1f;
+  --color-rd-line: #2c2c30;
+  /* The inside of a die-cut window: the pale grey the original site
+     already used behind its product photos. */
+  --color-rd-paper: #f1f0ee;
+
+  /* franklin-gothic-urw -> Libre Franklin, franklin-gothic-urw-cond ->
+     Archivo Narrow (closest free equivalents of the original Adobe Fonts). */
   --font-body: var(--font-libre-franklin), Arial, Helvetica, sans-serif;
-  --font-cond: var(--font-archivo-narrow), Arial, Helvetica, sans-serif;
+  --font-cond: var(--font-archivo-narrow), "Arial Narrow", Arial, sans-serif;
   --font-plain: Arial, "Helvetica Neue", Helvetica, sans-serif;
 
-  /* The original site changes layout at 676px, 851px and 1151px.
-     We use the same three points so the clone reflows where the
-     original does. Write them as `tablet:`, `laptop:` and `desktop:`
-     prefixes, e.g. `desktop:flex-row`. Tailwind's built-in sm/md/lg
-     still work too, but this project sticks to these three. */
+  /* The original site changes layout at 676px, 851px and 1151px. */
   --breakpoint-tablet: 676px;
   --breakpoint-laptop: 851px;
   --breakpoint-desktop: 1151px;
 }
 
-/* The scratched dark backdrop that sits behind every page. */
+/* ---------------------------------------------------------------
+   Surfaces
+   A tiny SVG noise tile gives every dark surface a fine grain, like
+   powder-coated metal. It is drawn once by the browser and repeated,
+   so it costs no request and no JavaScript.
+   --------------------------------------------------------------- */
+:root {
+  --rd-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --rd-header-h: 60px;
+  color-scheme: dark;
+}
+
 html {
-  background: #000000 url("/images/common/site-backdrop.jpg") repeat center top;
+  background: var(--color-rd-ink);
+  scroll-padding-top: calc(var(--rd-header-h) + 16px);
 }
 
 body {
   font-family: var(--font-body);
   color: var(--color-rd-gray);
-  /* The fixed menu bar is 52px tall, so page content starts below it. */
-  padding-top: 52px;
+  background: var(--rd-grain), var(--color-rd-ink);
+  padding-top: var(--rd-header-h);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* The matching red glow on the big homepage headline. */
-.rd-text-glow {
-  text-shadow:
-    0 0 8px rgba(237, 28, 36, 0.25),
-    0 0 8px rgba(237, 28, 36, 0.25);
+.rd-grain {
+  background-image: var(--rd-grain);
 }
 
-/* The red glow around the three picture links on the homepage.
-   The original applies the same shadow twice, which makes it stronger,
-   so it is repeated here too. */
-.rd-glow {
+/* The raised panel most sections sit on. */
+.rd-surface {
+  background: var(--rd-grain), linear-gradient(180deg, #17171a, #111113);
   box-shadow:
-    0 0 8px rgba(237, 28, 36, 0.5),
-    0 0 8px rgba(237, 28, 36, 0.5);
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 1px 0 rgba(0, 0, 0, 0.8);
 }
 
-/* Make keyboard focus clearly visible without changing the visual design. */
+/* ---------------------------------------------------------------
+   Pressed type
+   .rd-emboss  - raised, readable lettering for real headings.
+   .rd-deboss  - lettering stamped *into* the surface. Low contrast on
+                 purpose, so it is only used for decorative words that
+                 are hidden from screen readers.
+   --------------------------------------------------------------- */
+.rd-emboss {
+  color: var(--color-rd-light);
+  text-shadow:
+    0 -1px 0 rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.14),
+    0 3px 10px rgba(0, 0, 0, 0.55);
+}
+
+.rd-emboss-red {
+  color: var(--color-rd-red);
+  text-shadow:
+    0 -1px 0 rgba(0, 0, 0, 0.85),
+    0 1px 0 rgba(255, 180, 180, 0.22),
+    0 3px 12px rgba(0, 0, 0, 0.6);
+}
+
+.rd-deboss {
+  color: #121214;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.07),
+    0 -1px 0 rgba(0, 0, 0, 0.95);
+}
+
+/* ---------------------------------------------------------------
+   Die-cut card
+   A card face with a window cut out of it. The product picture sits
+   *behind* the face, so it shows through the window, and when it moves
+   up it slides out over the top edge of the card - like a part being
+   lifted out of its box.
+
+   The face is drawn by a huge spread shadow around the transparent
+   window; the face clips that shadow to its own rounded edges.
+   --------------------------------------------------------------- */
+.rd-diecut {
+  --face: #18181b;
+  --win-top: 9%;
+  --win-x: 11%;
+  --win-h: 60%;
+  --win-radius: 50% 50% 12px 12px / 34% 34% 12px 12px;
+  position: relative;
+  isolation: isolate;
+}
+
+.rd-diecut-media {
+  position: absolute;
+  z-index: 0;
+  top: var(--win-top);
+  left: var(--win-x);
+  right: var(--win-x);
+  height: var(--win-h);
+  border-radius: var(--win-radius);
+  background: var(--color-rd-paper);
+}
+
+.rd-diecut-lift {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.rd-diecut-img {
+  position: absolute;
+  inset: 6% 8% 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rd-diecut-img img {
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.35));
+}
+
+.rd-diecut-face {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 16px;
+  pointer-events: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 18px 40px -18px rgba(0, 0, 0, 0.9);
+}
+
+.rd-diecut-face::before {
+  /* the grain on the face, above the window shadow */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: var(--rd-grain);
+  opacity: 0.9;
+}
+
+.rd-diecut-window {
+  position: absolute;
+  top: var(--win-top);
+  left: var(--win-x);
+  right: var(--win-x);
+  height: var(--win-h);
+  border-radius: var(--win-radius);
+  box-shadow:
+    0 0 0 200vmax var(--face),
+    inset 0 8px 16px rgba(0, 0, 0, 0.55),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.rd-diecut-body {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hover: the part lifts out of the box. Pointer devices only. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .rd-diecut:hover .rd-diecut-img,
+  .rd-diecut:focus-visible .rd-diecut-img,
+  .rd-diecut:focus-within .rd-diecut-img {
+    transform: translateY(-22%);
+  }
+}
+
+/* ---------------------------------------------------------------
+   Dashed spec table and numbered steps
+   --------------------------------------------------------------- */
+.rd-dash {
+  border-color: rgba(143, 143, 143, 0.35);
+  border-style: dashed;
+}
+
+/* The native <details> marker is replaced by our own plus sign. */
+.rd-faq summary {
+  list-style: none;
+}
+.rd-faq summary::-webkit-details-marker {
+  display: none;
+}
+.rd-faq[open] .rd-faq-icon {
+  transform: rotate(45deg);
+}
+
+/* ---------------------------------------------------------------
+   Entrance on first paint (CSS only, so there is no flash before the
+   JavaScript arrives). Skipped for people who prefer less motion.
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .rd-rise {
+    animation: rd-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--d, 0s);
+  }
+}
+
+@keyframes rd-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Make keyboard focus clearly visible. */
 a:focus-visible,
-button:focus-visible {
+button:focus-visible,
+summary:focus-visible {
   outline: 2px solid var(--color-rd-red);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--color-rd-red);
+  color: #fff;
 }

@@ -3,6 +3,7 @@ import { Archivo_Narrow, Libre_Franklin } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import MotionDirector from "@/components/motion/MotionDirector";
 import { isProduction, site } from "@/data/site";
 
 // The original site uses two Adobe Fonts faces that are licensed to that
@@ -43,8 +44,11 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col">
         <Header />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1 overflow-x-clip">
+          {children}
+        </main>
         <Footer />
+        <MotionDirector />
       </body>
     </html>
   );

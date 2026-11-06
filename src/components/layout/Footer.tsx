@@ -10,46 +10,47 @@ import { contactInfo, footerServices } from "@/data/contact";
 export default function Footer() {
   return (
     <footer className="mt-auto">
-      <div
-        className="bg-[rgba(14,14,15,0.6)]"
-        style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.12)" }}
-      >
-        <Container className="flex flex-col gap-8 pt-[40px] pb-[40px] laptop:flex-row laptop:flex-wrap laptop:gap-x-10 laptop:gap-y-8 desktop:flex-nowrap desktop:gap-0 desktop:pt-[68px] desktop:pb-[48px]">
-          {/* Badge and the four service words sit side by side. */}
-          <div className="flex flex-wrap items-start justify-center gap-4 tablet:flex-nowrap tablet:justify-start desktop:w-[421px] desktop:flex-none desktop:gap-0">
+      <div className="rd-surface relative overflow-hidden border-t border-white/[0.05]">
+        <span
+          aria-hidden="true"
+          className="rd-deboss pointer-events-none absolute right-0 -bottom-[0.2em] font-cond text-[22vw] leading-none font-bold whitespace-nowrap uppercase select-none desktop:text-[240px]"
+        >
+          Ride Dynamics
+        </span>
+
+        <Container className="relative grid gap-10 pt-14 pb-16 laptop:grid-cols-12 laptop:gap-8 laptop:pt-20 laptop:pb-24">
+          <div className="flex items-start gap-6 laptop:col-span-5">
             <Image
               src="/images/logo/ride-dynamics-logo-small.png"
               alt="Ride Dynamics"
               width={192}
               height={192}
-              className="h-[152px] w-[152px] flex-none laptop:h-[192px] laptop:w-[192px]"
+              className="h-[120px] w-[120px] flex-none laptop:h-[152px] laptop:w-[152px]"
             />
-            <ul className="font-cond text-rd-yellow text-[24px] leading-[36px] font-bold desktop:mt-[5px] laptop:text-[30px] laptop:leading-[45px]">
+            <ul className="font-cond text-[24px] leading-[1.35] font-bold text-rd-yellow uppercase laptop:text-[30px]">
               {footerServices.map((service) => (
                 <li key={service}>{service}</li>
               ))}
             </ul>
           </div>
 
-          {/* Phone number. */}
-          <div className="flex items-baseline gap-[12px] desktop:mt-[47px] desktop:w-[400px] desktop:flex-none">
-            <span className="font-cond text-rd-gray text-[24px] leading-[36px] font-bold laptop:text-[30px]">
+          <div className="laptop:col-span-3">
+            <p className="font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
               Phone:
-            </span>
+            </p>
             <a
               href={contactInfo.phoneHref}
-              className="text-rd-gray hover:text-rd-gray-hover text-[20px] leading-[29px] font-black no-underline laptop:text-[24px]"
+              className="mt-2 inline-block font-cond text-[28px] font-bold text-rd-light no-underline transition-colors hover:text-white"
             >
               {contactInfo.phone}
             </a>
           </div>
 
-          {/* Postal address. */}
-          <div className="desktop:mt-[8px]">
-            <p className="font-cond text-rd-gray text-[24px] leading-[36px] font-bold laptop:text-[30px]">
+          <div className="laptop:col-span-4">
+            <p className="font-cond text-[13px] font-bold tracking-[4px] text-rd-red uppercase">
               Address:
             </p>
-            <address className="font-cond text-rd-gray text-[20px] leading-[29px] font-bold not-italic laptop:text-[24px]">
+            <address className="mt-2 font-cond text-[22px] leading-[1.35] font-bold text-rd-light not-italic">
               {contactInfo.address.map((line) => (
                 <span key={line} className="block">
                   {line}
@@ -61,10 +62,7 @@ export default function Footer() {
       </div>
 
       {/* The thin red bar at the very bottom. */}
-      <div
-        className="bg-rd-red-dark flex min-h-[35px] items-center justify-center px-4 py-[2px]"
-        style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
-      >
+      <div className="flex min-h-[40px] items-center justify-center bg-rd-red-dark px-4 py-2">
         <FooterCredit builtInYear={new Date().getFullYear()} />
       </div>
     </footer>
